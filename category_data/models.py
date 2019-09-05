@@ -69,8 +69,8 @@ class MyUser(AbstractBaseUser):
     USERNAME_FIELD = 'username'
 
     class Meta:
-        verbose_name = '사용자'
-        verbose_name_plural = '사용자'
+        verbose_name = 'USER'
+        verbose_name_plural = 'USER'
 
     def get_full_name(self):
         return self.name
@@ -193,6 +193,9 @@ class OriginalImage(models.Model):
     # TODO: 이름
     image = models.ImageField(upload_to='original-bag-images-dev', null=True, blank=True)
 
+    class Meta:
+        verbose_name = '[1] Original Image'
+
     def get_image_extension(self):
         return 'jpeg'
 
@@ -248,6 +251,9 @@ class CroppedImage(models.Model):
     image_url = models.URLField(null=True,blank=True, max_length=250, verbose_name='aws s3 이미지 url')
     valid = models.BooleanField(default=False)
     usable = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = '[2] Cropped Image'
 
     def validate_coordinates(self):
         if self.left >= self.right:
@@ -313,28 +319,68 @@ class CroppedImage(models.Model):
 class ColorTag(models.Model):
     color_name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = '[4] Color Tag'
+
+    def __str__(self):
+        return self.color_name
+
 
 class ShapeTag(models.Model):
-    color_name = models.CharField(max_length=50)
+    shape_name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = '[5] Shape Tag'
 
-class CharmTag(models.Model):
-    color_name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.shape_name
 
 
 class HandleTag(models.Model):
-    color_name = models.CharField(max_length=50)
+    handle_name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = '[6] Handle Tag'
+
+    def __str__(self):
+        return self.handle_name
+
+
+class CharmTag(models.Model):
+    charm_name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = '[7] Charm Tag'
+
+    def __str__(self):
+        return self.charm_name
 
 
 class DecoTag(models.Model):
-    color_name = models.CharField(max_length=50)
+    deco_name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = '[8] Deco Tag'
+
+    def __str__(self):
+        return self.deco_name
 
 
 class PatternTag(models.Model):
-    color_name = models.CharField(max_length=50)
+    pattern_name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = '[9] Pattern Tag'
+
+    def __str__(self):
+        return self.pattern_name
 
 
 class Categories(models.Model):
+
+    class Meta:
+        verbose_name = '[3] Categorie'
+
     version = models.IntegerField()
     cropped_image = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
     color_source = models.ForeignKey(ColorTag, null=True, on_delete=models.CASCADE, related_name='colors')
