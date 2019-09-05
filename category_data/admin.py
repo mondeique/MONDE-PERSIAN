@@ -1,6 +1,5 @@
 from django.contrib import admin
 from category_data.models import *
-# Register your models here.
 
 
 class ColorAdmin(admin.ModelAdmin):

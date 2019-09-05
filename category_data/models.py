@@ -320,7 +320,7 @@ class ColorTag(models.Model):
     color_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[4] Color Tag'
+        verbose_name = '[3-1] Color Tag'
 
     def __str__(self):
         return self.color_name
@@ -330,7 +330,7 @@ class ShapeTag(models.Model):
     shape_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[5] Shape Tag'
+        verbose_name = '[3-2] Shape Tag'
 
     def __str__(self):
         return self.shape_name
@@ -340,7 +340,7 @@ class HandleTag(models.Model):
     handle_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[6] Handle Tag'
+        verbose_name = '[3-3] Handle Tag'
 
     def __str__(self):
         return self.handle_name
@@ -350,7 +350,7 @@ class CharmTag(models.Model):
     charm_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[7] Charm Tag'
+        verbose_name = '[3-4] Charm Tag'
 
     def __str__(self):
         return self.charm_name
@@ -360,7 +360,7 @@ class DecoTag(models.Model):
     deco_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[8] Deco Tag'
+        verbose_name = '[3-5] Deco Tag'
 
     def __str__(self):
         return self.deco_name
@@ -370,7 +370,7 @@ class PatternTag(models.Model):
     pattern_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[9] Pattern Tag'
+        verbose_name = '[3-6] Pattern Tag'
 
     def __str__(self):
         return self.pattern_name
@@ -379,7 +379,7 @@ class PatternTag(models.Model):
 class Categories(models.Model):
 
     class Meta:
-        verbose_name = '[3] Categorie'
+        verbose_name = '[3-0] Categorie'
 
     version = models.IntegerField()
     cropped_image = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
