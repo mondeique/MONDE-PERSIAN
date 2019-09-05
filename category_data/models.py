@@ -59,7 +59,6 @@ class UserManager(BaseUserManager):
 class MyUser(AbstractBaseUser):
     objects = UserManager()
 
-    tag_user = models.IntegerField(null=True, blank=True, verbose_name='Qbase Tag User')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False, verbose_name='관리자 여부')
 
@@ -81,6 +80,12 @@ class MyUser(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
 
     @property
     def is_staff(self):
@@ -181,11 +186,12 @@ User = get_user_model()
 
 
 class OriginalImage(models.Model):
+
     assigned_user = models.ForeignKey(MyUser, null=True, blank=True, on_delete=models.CASCADE, related_name='assigned_original_images')
     image_url = models.URLField(max_length=300)
     valid = models.NullBooleanField()
     # TODO: 이름
-    image = models.ImageField(upload_to='', null=True, blank=True)
+    image = models.ImageField(upload_to='original-bag-images-dev', null=True, blank=True)
 
     def get_image_extension(self):
         return 'jpeg'
@@ -207,12 +213,8 @@ class OriginalImage(models.Model):
             print('save original image')
             self._save_image()
 
-    def save_valid(self, *args, **kwargs):
-        #TODO: fix me!
-        super(OriginalImage, self).save(*args, **kwargs)
-
+    # image_url 을 통해 image 저장
     def _save_image(self):
-        #TODO : crop 말고 저장
         from PIL import Image
         resp = requests.get(self.image_url)
         print('request')
@@ -235,14 +237,14 @@ class OriginalImage(models.Model):
 
 
 class CroppedImage(models.Model):
+
     assigned_user = models.ForeignKey(MyUser, null=True, blank=True, on_delete=models.CASCADE, related_name='assigned_cropped_images')
     origin_source = models.ForeignKey(OriginalImage, null=True, blank=True, related_name='cropped_images', on_delete=models.CASCADE)
     left = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     top = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     right = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     bottom = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
-    # TODO : 이름
-    image = models.ImageField(upload_to='', null=True, blank=True)
+    image = models.ImageField(upload_to='cropped-bag-images-dev', null=True, blank=True)
     image_url = models.URLField(null=True,blank=True, max_length=250, verbose_name='aws s3 이미지 url')
     valid = models.BooleanField(default=False)
     usable = models.BooleanField(default=True)
@@ -340,7 +342,7 @@ class Categories(models.Model):
     charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE, related_name='charms')
     handle_source = models.ForeignKey(HandleTag, null=True, on_delete=models.CASCADE, related_name='handles')
     deco_source = models.ForeignKey(DecoTag, null=True, on_delete=models.CASCADE, related_name='decorations')
-    pattern_soruce = models.ForeignKey(PatternTag, null=True, on_delete=models.CASCADE, related_name='patterns')
+    pattern_source = models.ForeignKey(PatternTag, null=True, on_delete=models.CASCADE, related_name='patterns')
 
 
 
