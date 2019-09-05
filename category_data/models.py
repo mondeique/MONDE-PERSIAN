@@ -175,7 +175,7 @@ class MyUser(AbstractBaseUser):
         images_count = user.assigned_cropped_images.categories.decorations.count()
         print(images_count)
         return images_count
-    
+
 
 User = get_user_model()
 
@@ -337,7 +337,7 @@ class Categories(models.Model):
     cropped_image = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
     color_source = models.ForeignKey(ColorTag, null=True, on_delete=models.CASCADE, related_name='colors')
     shape_source = models.ForeignKey(ShapeTag, null=True, on_delete=models.CASCADE, related_name='shapes')
-    charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE, related_name='chamrs')
+    charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE, related_name='charms')
     handle_source = models.ForeignKey(HandleTag, null=True, on_delete=models.CASCADE, related_name='handles')
     deco_source = models.ForeignKey(DecoTag, null=True, on_delete=models.CASCADE, related_name='decorations')
     pattern_soruce = models.ForeignKey(PatternTag, null=True, on_delete=models.CASCADE, related_name='patterns')
