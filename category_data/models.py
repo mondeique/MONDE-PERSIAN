@@ -382,7 +382,7 @@ class Categories(models.Model):
         verbose_name = '[3-0] Categorie'
 
     version = models.IntegerField()
-    cropped_image = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
+    cropped_source = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
     color_source = models.ForeignKey(ColorTag, null=True, on_delete=models.CASCADE, related_name='colors')
     shape_source = models.ForeignKey(ShapeTag, null=True, on_delete=models.CASCADE, related_name='shapes')
     charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE, related_name='charms')
