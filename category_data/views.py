@@ -10,11 +10,11 @@ from rest_framework.views import APIView
 from .serializers import *
 from knox.models import AuthToken
 
-
 ASSIGN_SIZE = 50
 VERSION = 1
 
 
+# username과 password를 입력하고 회원가입 버튼을 눌렀을 때 호출되는 API
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = CreateUserSerializer
 
@@ -26,7 +26,7 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         # serializer.is_valid 호출 시 data 형식이 맞는지 확인하게 된다.
         serializer.is_valid(raise_exception=True)
-        # serializer.save를 호출하면 serializers 안에 있는 create가 호출이 된다 or data가 존재하면 update가 호출이 된다.
+        # serializer.save를 호출하면 instance 여부에 따라 update를 호출할지 create를 호출할지 결정하게 된다.
         user = serializer.save()
         return Response(
             {
@@ -38,6 +38,7 @@ class RegistrationAPI(generics.GenericAPIView):
         )
 
 
+# username과 password를 입력하고 로그인 버튼을 눌렀을 때 호출되는 API
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginUserSerializer
 
@@ -55,6 +56,7 @@ class LoginAPI(generics.GenericAPIView):
         )
 
 
+# User 자체에 대한 접근을 하기 위한 API
 class UserAPI(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
@@ -63,6 +65,7 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 
+# Home (Main 화면) 으로 넘어갔을 때 호출되는 API
 class HomeRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = MyUser.objects.all()
@@ -134,6 +137,7 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
         return None
 
 
+# Boxing 할당받기 버튼을 눌렀을 때 호출되는 API
 class BoxingAssignAPIView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -141,7 +145,7 @@ class BoxingAssignAPIView(APIView):
 
     def post(self, request, **kwargs):
         user = request.user
-        unassigned_images = self.queryset.filter(assigned_user__isnull=True)
+        unassigned_images = self.queryset.filter(assigned_user__isnull=True).exclude(imge="")
         images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
         for image in images:
             image.assigned_user = user
@@ -149,8 +153,8 @@ class BoxingAssignAPIView(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
+# Labeling 할당받기 버튼을 눌렀을 때 호출되는 API
 class LabelingAssignAPIView(generics.CreateAPIView):
-    # TODO: make it Viewset
     permission_classes = (IsAuthenticated,)
     queryset = CroppedImage.objects.all()
 
