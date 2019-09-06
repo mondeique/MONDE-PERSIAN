@@ -36,3 +36,111 @@ class LoginUserSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Unable to log in with provided credentials.")
+
+
+# Home(Main 화면) 조회 시리얼라이저
+class UserHomeRetrieveSerializer(serializers.ModelSerializer):
+    total_boxing_worked_count = serializers.SerializerMethodField()
+    total_labeling_worked_count = serializers.SerializerMethodField()
+    boxing_image_id = serializers.SerializerMethodField()
+    color_labeling_image_id = serializers.SerializerMethodField()
+    shape_labeling_image_id = serializers.SerializerMethodField()
+    handle_labeling_image_id = serializers.SerializerMethodField()
+    charm_labeling_image_id = serializers.SerializerMethodField()
+    deco_labeling_image_id = serializers.SerializerMethodField()
+    pattern_labeling_image_id = serializers.SerializerMethodField()
+    boxing_worked_count = serializers.ReadOnlyField()
+    boxing_assigned_count = serializers.ReadOnlyField()
+    color_labeling_worked_count = serializers.ReadOnlyField()
+    color_labeling_assigned_count = serializers.ReadOnlyField()
+    shape_labeling_worked_count = serializers.ReadOnlyField()
+    shape_labeling_assigned_count = serializers.ReadOnlyField()
+    handle_labeling_worked_count = serializers.ReadOnlyField()
+    handle_labeling_assigned_count = serializers.ReadOnlyField()
+    charm_labeling_worked_count = serializers.ReadOnlyField()
+    charm_labeling_assigned_count = serializers.ReadOnlyField()
+    deco_labeling_worked_count = serializers.ReadOnlyField()
+    deco_labeling_assigned_count = serializers.ReadOnlyField()
+    pattern_labeling_worked_count = serializers.ReadOnlyField()
+    pattern_labeling_assigned_count = serializers.ReadOnlyField()
+
+    class Meta:
+        model = MyUser
+        fields = ['username',
+                  'id',
+                  'boxing_worked_count',
+                  'boxing_assigned_count',
+                  'color_labeling_worked_count',
+                  'color_labeling_assigned_count',
+                  'shape_labeling_worked_count',
+                  'shape_labeling_assigned_count',
+                  'handle_labeling_worked_count',
+                  'handle_labeling_assigned_count',
+                  'charm_labeling_worked_count',
+                  'charm_labeling_assigned_count',
+                  'deco_labeling_worked_count',
+                  'deco_labeling_assigned_count',
+                  'pattern_labeling_worked_count',
+                  'pattern_labeling_assigned_count',
+                  'total_boxing_worked_count',
+                  'total_labeling_worked_count',
+                  'boxing_image_id',
+                  'color_labeling_image_id',
+                  'shape_labeling_image_id',
+                  'handle_labeling_image_id',
+                  'charm_labeling_image_id',
+                  'deco_labeling_image_id',
+                  'pattern_labeling_image_id',]
+
+    def get_total_boxing_worked_count(self, myuser):
+        count = myuser.assigned_original_images.filter(valid=True).count()
+        return count
+
+    def get_total_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.filter(valid=True).count()
+        return count
+
+    def get_color_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.color_source.filter(null=False).count()
+        return count
+
+    def get_shape_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.shape_source.filter(null=False).count()
+        return count
+
+    def get_handle_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.handle_source.filter(null=False).count()
+        return count
+
+    def get_charm_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.charm_source.filter(null=False).count()
+        return count
+
+    def get_deco_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.deco_source.filter(null=False).count()
+        return count
+
+    def get_pattern_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.pattern_source.filter(null=False).count()
+        return count
+
+    def get_boxing_image_id(self, validated_data):
+        return self.context['boxing_image_id']
+
+    def get_color_labeling_image_id(self, validated_data):
+        return self.context['color_labeling_image_id']
+
+    def get_shape_labeling_image_id(self, validated_data):
+        return self.context['shape_labeling_image_id']
+
+    def get_handle_labeling_image_id(self, validated_data):
+        return self.context['handle_labeling_image_id']
+
+    def get_charm_labeling_image_id(self, validated_data):
+        return self.context['charm_labeling_image_id']
+
+    def get_deco_labeling_image_id(self, validated_data):
+        return self.context['deco_labeling_image_id']
+
+    def get_pattern_labeling_image_id(self, validated_data):
+        return self.context['pattern_labeling_image_id']

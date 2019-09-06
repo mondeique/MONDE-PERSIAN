@@ -60,3 +60,74 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class HomeRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = MyUser.objects.all()
+    serializer_class = UserHomeRetrieveSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        print('get')
+        serializer = self.serializer_class(user, context={'boxing_image_id':self.boxing_image_id(),
+                                                          'color_labeling_image_id':self.color_labeling_image_id(),
+                                                          'shape_labeling_image_id':self.shape_labeling_image_id(),
+                                                          'handle_labeling_image_id':self.handle_labeling_image_id(),
+                                                          'charm_labeling_image_id':self.charm_labeling_image_id(),
+                                                          'deco_labeling_image_id':self.deco_labeling_image_id(),
+                                                          'pattern_labeling_image_id':self.pattern_labeling_image_id()})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self):
+        return self.request.user
+
+    def boxing_image_id(self):
+        user = self.get_object()
+        image = user.assigned_original_images.filter(valid=None).order_by('pk').first()
+        print(image)
+        if image:
+            return image.id
+        return None
+
+    def color_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.color_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def shape_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.shape_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def handle_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.handle_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def charm_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.charm_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def deco_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.deco_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def pattern_labeling_image_id(self):
+        user = self.get_object()
+        image = user.assigned_cropped_images.categories.pattern_source.filter(null=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
