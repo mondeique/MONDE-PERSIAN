@@ -1,3 +1,4 @@
+from knox.auth import TokenAuthentication
 from django.shortcuts import render
 from django.shortcuts import redirect
 from rest_framework import mixins, status
@@ -70,13 +71,13 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
         print('get')
-        serializer = self.serializer_class(user, context={'boxing_image_id':self.boxing_image_id(),
-                                                          'color_labeling_image_id':self.color_labeling_image_id(),
-                                                          'shape_labeling_image_id':self.shape_labeling_image_id(),
-                                                          'handle_labeling_image_id':self.handle_labeling_image_id(),
-                                                          'charm_labeling_image_id':self.charm_labeling_image_id(),
-                                                          'deco_labeling_image_id':self.deco_labeling_image_id(),
-                                                          'pattern_labeling_image_id':self.pattern_labeling_image_id()})
+        serializer = self.serializer_class(user, context={'boxing_image_id': self.boxing_image_id(),
+                                                          'color_labeling_image_id': self.color_labeling_image_id(),
+                                                          'shape_labeling_image_id': self.shape_labeling_image_id(),
+                                                          'handle_labeling_image_id': self.handle_labeling_image_id(),
+                                                          'charm_labeling_image_id': self.charm_labeling_image_id(),
+                                                          'deco_labeling_image_id': self.deco_labeling_image_id(),
+                                                          'pattern_labeling_image_id': self.pattern_labeling_image_id()})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_object(self):
@@ -131,3 +132,33 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
         if image:
             return image.id
         return None
+
+
+class BoxingAssignAPIView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = OriginalImage.objects.all()
+
+    def post(self, request, **kwargs):
+        user = request.user
+        unassigned_images = self.queryset.filter(assigned_user__isnull=True)
+        images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
+        for image in images:
+            image.assigned_user = user
+            image.save_valid()
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class LabelingAssignAPIView(generics.CreateAPIView):
+    # TODO: make it Viewset
+    permission_classes = (IsAuthenticated,)
+    queryset = CroppedImage.objects.all()
+
+    def post(self, request, **kwargs):
+        user = request.user
+        unassigned_images = self.queryset.filter(assigned_user__isnull=True).exclude(image="")
+        images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
+        for image in images:
+            image.assigned_user = user
+            image.save_valid()
+        return Response(status=status.HTTP_201_CREATED)
