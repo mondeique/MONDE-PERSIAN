@@ -202,10 +202,10 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
             top = cropped_image.top
             bottom = cropped_image.bottom
             data = {
-                'left' : left,
-                'top' : top,
-                'right' : right,
-                'bottom' : bottom }
+                'left': left,
+                'top': top,
+                'right': right,
+                'bottom': bottom}
         else:
             data = None
         return data
