@@ -22,3 +22,6 @@ $ pip install -r requirements.txt
 9. BoxingCreateUpdateAPI : Box 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
 10. BoxingDestroyAPIView : Box 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
 11. BoxingHoldAPIView : Box의 모양이 그대로 남아있는 holding 될 때 호출되는 API (maybe deprecated)
+### Labeling page
+12. LabelingRetrieveAPIView : Labeling 화면 url 입력 시 호출되는 API
+13. LabelingDestroyAPIView : Labeling Image 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
