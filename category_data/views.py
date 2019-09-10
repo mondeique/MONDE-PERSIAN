@@ -166,3 +166,135 @@ class LabelingAssignAPIView(generics.CreateAPIView):
             image.assigned_user = user
             image.save_valid()
         return Response(status=status.HTTP_201_CREATED)
+
+
+# Boxing 화면 url 입력 시 호출되는 API
+class BoxingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = BoxingRetrieveSerializer
+    queryset = OriginalImage.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        id = self.kwargs['image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        left_images = images.filter(valid=None)
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+
+def retry(func):
+    def retried_func(*args, **kwargs):
+        MAX_TRIES = 5
+        tries = 0
+        while True:
+            resp = func(*args,**kwargs)
+            print('---resp code---')
+            print(resp.status_code)
+            if resp.status_code != 200 and tries < MAX_TRIES:
+                tries += 1
+                print(tries)
+                continue
+            break
+        return resp
+    return retried_func
+
+
+# Box 생성 및 업데이트 시 호출되는 API
+class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = CroppedImage.objects.all()
+    serializer_class = BoxCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        original_image = self.get_object()
+        left, right, top, bottom = self.get_ltrb()
+        # client에서 put으로 보내지 못한경우 : update의 경우
+        # 이 경우는 원본이미지 저장 X
+        if original_image.cropped_images.last():
+            cropped_image = self.queryset.get(origin_source=original_image)
+            cropped_image.update(left, top, right, bottom)
+            return Response({},status=status.HTTP_206_PARTIAL_CONTENT)
+
+        CroppedImage.objects.create(origin_source=original_image,
+                                    left=left,
+                                    top=top,
+                                    right=right,
+                                    bottom=bottom)
+        original_image.valid = True
+        original_image.save()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        original_image = self.get_object()
+        cropped_image = self.queryset.get(origin_source=original_image)
+        left, right, top, bottom = self.get_ltrb()
+        cropped_image.update(left, top, right, bottom)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_ltrb(self):
+        data = self.request.data
+        left = data['left']
+        right = data['right']
+        top = data['top']
+        bottom = data['bottom']
+        if left and right and top and bottom:
+            return (float(left), float(right), float(top), float(bottom))
+        else:
+            print('원본')
+            return (0, 1, 0, 1)
+
+    def get_serializer_context(self, *args, **kwargs):
+        id = self.kwargs['original_image_id']
+        original_image = OriginalImage.objects.filter(pk=id).last()
+        if original_image:
+            return {'request': self.request,
+                    'original_image': original_image,}
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['original_image_id']
+        original_image = OriginalImage.objects.filter(pk=id).last()
+        return original_image
+
+
+# Box 삭제 시 호출되는 API
+class BoxingDestroyAPIView(generics.DestroyAPIView):
+    """
+    original image 삭제
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = OriginalImage.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        return super(BoxingDestroyAPIView, self).destroy(request, *args, **kwargs)
+
+    def get_object(self):
+        id = self.kwargs['original_image_id']
+        return self.queryset.get(pk=id)
+
+
+# Box hold 하고 있을 때 호출되는 API
+class BoxingHoldAPIView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = OriginalImage.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        image = self.get_object()
+        # put이고 updateapiview라 다를듯.
+        image.update(valid=False)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['original_image_id']
+        return self.queryset.filter(pk=id)

@@ -144,3 +144,80 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
 
     def get_pattern_labeling_image_id(self, validated_data):
         return self.context['pattern_labeling_image_id']
+
+
+# Boxing 화면 조회 시리얼라이저
+class BoxingRetrieveSerializer(serializers.ModelSerializer):
+    next_id = serializers.SerializerMethodField()
+    prev_id = serializers.SerializerMethodField()
+    valid_next_id = serializers.SerializerMethodField()
+    valid_prev_id = serializers.SerializerMethodField()
+    box_info = serializers.SerializerMethodField()
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = OriginalImage
+        fields =['id',
+                 'image_url',
+                 'box_info',
+                 'next_id',
+                 'prev_id',
+                 'user',
+                 'valid_next_id',
+                 'valid_prev_id',]
+
+    def get_next_id(self, image):
+        images = self.context['images']
+        next_image = images.filter(pk__gt=image.id).order_by('pk').first()
+        if next_image:
+            return next_image.id
+        return None
+
+    def get_prev_id(self, image):
+        images = self.context['images']
+        prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
+        if prev_image:
+            return prev_image.id
+        return None
+
+    def get_valid_next_id(self, image):
+        left_images = self.context['left_images']
+        next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
+        if next_image:
+            return next_image.id
+        return None
+
+    def get_valid_prev_id(self, image):
+        left_images = self.context['left_images']
+        prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
+        if prev_image:
+            return prev_image.id
+        return None
+
+    def get_box_info(self, image):
+        cropped_image = image.cropped_images.last()
+        if cropped_image:
+            left = cropped_image.left
+            right = cropped_image.right
+            top = cropped_image.top
+            bottom = cropped_image.bottom
+            data = {
+                'left' : left,
+                'top' : top,
+                'right' : right,
+                'bottom' : bottom }
+        else:
+            data = None
+        return data
+
+
+# Boxing 생성 시리얼라이저
+class BoxCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CroppedImage
+        fields = ['id',
+                  'left',
+                  'top',
+                  'right',
+                  'bottom']
