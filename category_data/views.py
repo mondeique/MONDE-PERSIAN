@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
 from knox.models import AuthToken
+from .helpers import load_csv_data
 
 ASSIGN_SIZE = 50
 VERSION = 1
@@ -166,6 +167,23 @@ class LabelingAssignAPIView(generics.CreateAPIView):
             image.assigned_user = user
             image.save_valid()
         return Response(status=status.HTTP_201_CREATED)
+
+
+#  Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 함)
+class OriginalImageCreateAPIView(generics.CreateAPIView):
+    """
+    csv file upload
+    """
+    serializer_class = OriginalImageCreateSerializer
+    queryset = OriginalImage.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        csv_file = request.FILES['csv_file']
+        bag_url_list = load_csv_data(csv_file)
+        objs = [OriginalImage(image_url=url) for url in bag_url_list]
+        OriginalImage.objects.bulk_create(objs)
+
+        return redirect("/admin")
 
 
 # Boxing 화면 url 입력 시 호출되는 API

@@ -146,6 +146,23 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return self.context['pattern_labeling_image_id']
 
 
+# Original Image 조회 시리얼라이저
+class OriginalImageRetrieveSerializer(serializers.ModelSerializer):
+    original_image_id = serializers.ImageField(source='id')
+
+    class Meta:
+        model = OriginalImage
+        fields = ['original_image_id','image_url']
+
+
+# Original Image 생성 시리얼라이저
+class OriginalImageCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OriginalImage
+        fields = ['image_url']
+
+
 # Boxing 화면 조회 시리얼라이저
 class BoxingRetrieveSerializer(serializers.ModelSerializer):
     next_id = serializers.SerializerMethodField()
