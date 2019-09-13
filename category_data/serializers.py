@@ -676,3 +676,51 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
         else:
             data = None
         return data
+
+
+# Color Label 생성 및 업데이트 시리얼라이저
+class ColorLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['color_source']
+
+
+# Shape Label 생성 및 업데이트 시리얼라이저
+class ShapeLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['shape_source']
+
+
+# Handle Label 생성 및 업데이트 시리얼라이저
+class HandleLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['handle_source']
+
+
+# Charm Label 생성 및 업데이트 시리얼라이저
+class CharmLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['charm_source']
+
+
+# Deco Label 생성 및 업데이트 시리얼라이저
+class DecoLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['deco_source']
+
+
+# Pattern Label 생성 및 업데이트 시리얼라이저
+class PatternLabelCreateUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categories
+        fields = ['pattern_source']

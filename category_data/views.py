@@ -494,3 +494,41 @@ class LabelingDestroyAPIView(generics.DestroyAPIView):
     def get_object(self):
         id = self.kwargs['cropped_image_id']
         return self.queryset.get(pk=id)
+
+
+# Color Label 생성 및 업데이트 시 호출되는 API
+class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(color_source__isnull=True).all()
+    serializer_class = ColorLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        color_data = self.get_category_data()
+        print(color_data)
+        Categories.color_source.objects.create(**color_data)
+        print('saved!')
+        cropped_image.valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.filter(version=VERSION).last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = Categories.color_source.objects.filter(pk=id).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        color_data = serializer.data
+        return color_data
