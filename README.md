@@ -6,6 +6,7 @@ MONDEIQUE data management 및 알바 page server repo입니다.
 ```
 $ pip install -r requirements.txt
 ```
+- mysqlclient의 경우 따로 install 해야함 (OSX Mojave에서 지속적인 error 발생)
 ## API
 ### Login page
 - RegistraionAPI : username과 password를 입력하고 회원가입 버튼을 눌렀을 때 호출되는 API
