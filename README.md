@@ -6,7 +6,6 @@ MONDEIQUE data management 및 알바 page server repo입니다.
 ```
 $ pip install -r requirements.txt
 ```
-
 ## API
 ### Login page
 - RegistraionAPI : username과 password를 입력하고 회원가입 버튼을 눌렀을 때 호출되는 API
@@ -25,3 +24,4 @@ $ pip install -r requirements.txt
 ### Labeling page
 - LabelingRetrieveAPIView : Labeling 화면 url 입력 시 호출되는 API
 - LabelingDestroyAPIView : Labeling Image 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
+- LabelCreateUpdateAPI (6개) : 각 Label 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
