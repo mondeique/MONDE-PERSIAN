@@ -508,13 +508,13 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
         print(color_data)
         Categories.color_source.objects.create(**color_data)
         print('saved!')
-        cropped_image.valid = True
+        cropped_image.color_valid = True
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.filter(version=VERSION).last()
+        category = cropped_image.categories.color_source.last()
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
         serializer.update(category, request.data)
@@ -522,7 +522,7 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = Categories.color_source.objects.filter(pk=id).last()
+        cropped_image = CroppedImage.color_valid.filter(default=False).last()
         return cropped_image
 
     def get_category_data(self):
@@ -532,3 +532,193 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
         serializer.save()
         color_data = serializer.data
         return color_data
+
+
+# Shape Label 생성 및 업데이트 시 호출되는 API
+class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(shape_source__isnull=True).all()
+    serializer_class = ShapeLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        shape_data = self.get_category_data()
+        print(shape_data)
+        Categories.shape_source.objects.create(**shape_data)
+        print('saved!')
+        cropped_image.shape_valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.shape_source.last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = CroppedImage.shape_valid.filter(default=False).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        shape_data = serializer.data
+        return shape_data
+
+
+# Handle Label 생성 및 업데이트 시 호출되는 API
+class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(handle_source__isnull=True).all()
+    serializer_class = HandleLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        handle_data = self.get_category_data()
+        print(handle_data)
+        Categories.handle_source.objects.create(**handle_data)
+        print('saved!')
+        cropped_image.handle_valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.handle_source.last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = CroppedImage.handle_valid.filter(default=False).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        handle_data = serializer.data
+        return handle_data
+
+
+# Charm Label 생성 및 업데이트 시 호출되는 API
+class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(charm_source__isnull=True).all()
+    serializer_class = CharmLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        charm_data = self.get_category_data()
+        print(charm_data)
+        Categories.charm_source.objects.create(**charm_data)
+        print('saved!')
+        cropped_image.charm_valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.charm_source.last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = CroppedImage.charm_valid.filter(default=False).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        charm_data = serializer.data
+        return charm_data
+
+
+# Deco Label 생성 및 업데이트 시 호출되는 API
+class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(deco_source__isnull=True).all()
+    serializer_class = DecoLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        deco_data = self.get_category_data()
+        print(deco_data)
+        Categories.deco_source.objects.create(**deco_data)
+        print('saved!')
+        cropped_image.deco_valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.deco_source.last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = CroppedImage.deco_valid.filter(default=False).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        deco_data = serializer.data
+        return deco_data
+
+
+# Pattern Label 생성 및 업데이트 시 호출되는 API
+class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated,)
+    queryset = Categories.objects.filter(pattern_source__isnull=True).all()
+    serializer_class = PatternLabelCreateUpdateSerializer
+
+    def post(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        pattern_data = self.get_category_data()
+        print(pattern_data)
+        Categories.pattern_source.objects.create(**pattern_data)
+        print('saved!')
+        cropped_image.pattern_valid = True
+        cropped_image.save_valid()
+        return Response({}, status=status.HTTP_201_CREATED)
+
+    def put(self, request, *args, **kwargs):
+        cropped_image = self.get_object()
+        category = cropped_image.categories.pattern_source.last()
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        serializer.update(category, request.data)
+        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+
+    def get_object(self):
+        id = self.kwargs['cropped_image_id']
+        cropped_image = CroppedImage.pattern_valid.filter(default=False).last()
+        return cropped_image
+
+    def get_category_data(self):
+        data = self.request.data
+        serializer = self.serializer_class
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        pattern_data = serializer.data
+        return pattern_data

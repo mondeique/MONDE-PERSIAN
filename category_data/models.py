@@ -249,6 +249,12 @@ class CroppedImage(models.Model):
     bottom = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     image = models.ImageField(upload_to='cropped-bag-images-dev', null=True, blank=True)
     image_url = models.URLField(null=True,blank=True, max_length=250, verbose_name='aws s3 이미지 url')
+    color_valid = models.BooleanField(default=False)
+    shape_valid = models.BooleanField(default=False)
+    handle_valid = models.BooleanField(default=False)
+    charm_valid = models.BooleanField(default=False)
+    deco_valid = models.BooleanField(default=False)
+    pattern_valid = models.BooleanField(default=False)
     valid = models.BooleanField(default=False)
     usable = models.BooleanField(default=True)
 
