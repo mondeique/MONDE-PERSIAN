@@ -169,7 +169,7 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
                   'total_boxing_worked_count',
                   'total_labeling_worked_count',
                   ]
-        
+
     def get_total_boxing_worked_count(self, myuser):
         count = myuser.assigned_original_images.filter(valid=True).count()
         return count

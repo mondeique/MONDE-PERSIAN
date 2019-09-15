@@ -24,6 +24,7 @@ app_name = 'category'
 urlpatterns = [
     path('api/import/original-images', OriginalImageCreateAPIView.as_view(), name='import_image'),
     path('api/home',HomeRetrieveAPIView.as_view(), name='home'),
+    path('api/worker', WorkerManageRetrieveAPIView.as_view(), name='worker'),
     path('api/boxing/<int:image_id>',BoxingRetrieveAPIView.as_view()),
     path('api/colorlabeling/<int:image_id>',ColorLabelingRetrieveAPIView.as_view()),
     path('api/shapelabeling/<int:image_id>',ShapeLabelingRetrieveAPIView.as_view()),
