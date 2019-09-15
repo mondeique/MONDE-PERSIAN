@@ -18,6 +18,7 @@ $ LDFLAGS=-L/usr/local/opt/openssl/lib pip install mysqlclient
 - UserAPI : User 자체에 대한 접근을 하기 위한 API
 ### Main Homepage
 - HomeRetrieveAPIView : Home (Main 화면) 으로 넘어갔을 때 호출되는 API
+- WorkerManageRetrieveAPIView : 알바 page 화면으로 넘어갔을 때 호출되는 API (admin 에게마 보이도록 해야함)
 - BoxingAssignAPIView : Boxing 할당받기 버튼을 눌렀을 때 호출되는 API
 - LabelingAssignAPIView : Labeling 할당받기 버튼을 눌렀을 때 호출되는 API
 - OriginalImageCreateAPIView : Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 하는 API)
