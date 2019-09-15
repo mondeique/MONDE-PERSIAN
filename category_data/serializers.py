@@ -146,6 +146,63 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return self.context['pattern_labeling_image_id']
 
 
+# 알바 관리 page 조회 시리얼라이저
+class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
+    total_boxing_worked_count = serializers.SerializerMethodField()
+    total_labeling_worked_count = serializers.SerializerMethodField()
+    color_labeling_worked_count = serializers.ReadOnlyField()
+    shape_labeling_worked_count = serializers.ReadOnlyField()
+    handle_labeling_worked_count = serializers.ReadOnlyField()
+    charm_labeling_worked_count = serializers.ReadOnlyField()
+    deco_labeling_worked_count = serializers.ReadOnlyField()
+    pattern_labeling_worked_count = serializers.ReadOnlyField()
+
+    class Meta:
+        model = MyUser
+        fields = ['username',
+                  'color_labeling_worked_count',
+                  'shape_labeling_worked_count',
+                  'handle_labeling_worked_count',
+                  'charm_labeling_worked_count',
+                  'deco_labeling_worked_count',
+                  'pattern_labeling_worked_count',
+                  'total_boxing_worked_count',
+                  'total_labeling_worked_count',
+                  ]
+        
+    def get_total_boxing_worked_count(self, myuser):
+        count = myuser.assigned_original_images.filter(valid=True).count()
+        return count
+
+    def get_total_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.filter(valid=True).count()
+        return count
+
+    def get_color_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.color_source.filter(null=False).count()
+        return count
+
+    def get_shape_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.shape_source.filter(null=False).count()
+        return count
+
+    def get_handle_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.handle_source.filter(null=False).count()
+        return count
+
+    def get_charm_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.charm_source.filter(null=False).count()
+        return count
+
+    def get_deco_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.deco_source.filter(null=False).count()
+        return count
+
+    def get_pattern_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.categories.pattern_source.filter(null=False).count()
+        return count
+
+
 # Original Image 조회 시리얼라이저
 class OriginalImageRetrieveSerializer(serializers.ModelSerializer):
     original_image_id = serializers.ImageField(source='id')

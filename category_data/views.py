@@ -138,6 +138,22 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
         return None
 
 
+# 알바 관리 page 버튼을 눌렀을 때 호출되는 API
+class WorkerManageRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = MyUser.objects.all()
+    serializer_class = WorkerManageRetrieveSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.queryset.filter(is_admin=False)
+        serializer = self.serializer_class(user)
+        print('get')
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self):
+        return self.request.user
+
+
 # Boxing 할당받기 버튼을 눌렀을 때 호출되는 API
 class BoxingAssignAPIView(APIView):
     authentication_classes = (TokenAuthentication,)
