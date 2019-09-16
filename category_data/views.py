@@ -510,32 +510,28 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         color_data = self.get_category_data()
-        print(color_data)
-        Categories.color_source.objects.create(**color_data)
-        print('saved!')
-        cropped_image.color_valid = True
+        cropped_image.categories.color_source.objects.create(**color_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.color_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.color_source.objects.update(color_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.color_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        color_data = serializer.data
+        cropped_image = self.get_object()
+        color_data = {
+            'color': int(data['color']),
+            'cropped_image': cropped_image
+                      }
         return color_data
 
 
@@ -548,32 +544,28 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         shape_data = self.get_category_data()
-        print(shape_data)
-        Categories.shape_source.objects.create(**shape_data)
-        print('saved!')
-        cropped_image.shape_valid = True
+        cropped_image.categories.shape_source.objects.create(**shape_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.shape_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.shape_source.objects.update(shape_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.shape_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        shape_data = serializer.data
+        cropped_image = self.get_object()
+        shape_data = {
+            'shape': int(data['shape']),
+            'cropped_image': cropped_image
+                      }
         return shape_data
 
 
@@ -586,32 +578,28 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         handle_data = self.get_category_data()
-        print(handle_data)
-        Categories.handle_source.objects.create(**handle_data)
-        print('saved!')
-        cropped_image.handle_valid = True
+        cropped_image.categories.handle_source.objects.create(**handle_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.handle_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.handle_source.objects.update(handle_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.handle_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        handle_data = serializer.data
+        cropped_image = self.get_object()
+        handle_data = {
+            'handle': int(data['handle']),
+            'cropped_image': cropped_image
+                      }
         return handle_data
 
 
@@ -624,32 +612,28 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         charm_data = self.get_category_data()
-        print(charm_data)
-        Categories.charm_source.objects.create(**charm_data)
-        print('saved!')
-        cropped_image.charm_valid = True
+        cropped_image.categories.charm_source.objects.create(**charm_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.charm_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.charm_source.objects.update(charm_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.charm_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        charm_data = serializer.data
+        cropped_image = self.get_object()
+        charm_data = {
+            'charm': int(data['charm']),
+            'cropped_image': cropped_image
+                      }
         return charm_data
 
 
@@ -662,32 +646,28 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         deco_data = self.get_category_data()
-        print(deco_data)
-        Categories.deco_source.objects.create(**deco_data)
-        print('saved!')
-        cropped_image.deco_valid = True
+        cropped_image.categories.deco_source.objects.create(**deco_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.deco_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.deco_source.objects.update(deco_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.deco_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        deco_data = serializer.data
+        cropped_image = self.get_object()
+        deco_data = {
+            'deco': int(data['deco']),
+            'cropped_image': cropped_image
+                      }
         return deco_data
 
 
@@ -700,30 +680,27 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         pattern_data = self.get_category_data()
-        print(pattern_data)
-        Categories.pattern_source.objects.create(**pattern_data)
-        print('saved!')
-        cropped_image.pattern_valid = True
+        cropped_image.categories.pattern_source.objects.create(**pattern_data)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         category = cropped_image.categories.pattern_source.last()
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        serializer.update(category, request.data)
+        cropped_image.categories.pattern_source.objects.update(pattern_source=category)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
         id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.pattern_valid.filter(default=False).last()
+        cropped_image = CroppedImage.objects.get(pk=id)
         return cropped_image
 
     def get_category_data(self):
         data = self.request.data
-        serializer = self.serializer_class
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        pattern_data = serializer.data
+        cropped_image = self.get_object()
+        pattern_data = {
+            'pattern': int(data['pattern']),
+            'cropped_image': cropped_image
+                      }
         return pattern_data
+
