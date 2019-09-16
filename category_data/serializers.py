@@ -40,8 +40,16 @@ class LoginUserSerializer(serializers.Serializer):
 
 # Home(Main 화면) 조회 시리얼라이저
 class UserHomeRetrieveSerializer(serializers.ModelSerializer):
+    boxing_assigned_count = serializers.ReadOnlyField()
+    labeling_assigned_count = serializers.ReadOnlyField()
     total_boxing_worked_count = serializers.SerializerMethodField()
     total_labeling_worked_count = serializers.SerializerMethodField()
+    color_labeling_worked_count = serializers.ReadOnlyField()
+    shape_labeling_worked_count = serializers.ReadOnlyField()
+    handle_labeling_worked_count = serializers.ReadOnlyField()
+    charm_labeling_worked_count = serializers.ReadOnlyField()
+    deco_labeling_worked_count = serializers.ReadOnlyField()
+    pattern_labeling_worked_count = serializers.ReadOnlyField()
     boxing_image_id = serializers.SerializerMethodField()
     color_labeling_image_id = serializers.SerializerMethodField()
     shape_labeling_image_id = serializers.SerializerMethodField()
@@ -49,20 +57,6 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     charm_labeling_image_id = serializers.SerializerMethodField()
     deco_labeling_image_id = serializers.SerializerMethodField()
     pattern_labeling_image_id = serializers.SerializerMethodField()
-    boxing_worked_count = serializers.ReadOnlyField()
-    boxing_assigned_count = serializers.ReadOnlyField()
-    color_labeling_worked_count = serializers.ReadOnlyField()
-    color_labeling_assigned_count = serializers.ReadOnlyField()
-    shape_labeling_worked_count = serializers.ReadOnlyField()
-    shape_labeling_assigned_count = serializers.ReadOnlyField()
-    handle_labeling_worked_count = serializers.ReadOnlyField()
-    handle_labeling_assigned_count = serializers.ReadOnlyField()
-    charm_labeling_worked_count = serializers.ReadOnlyField()
-    charm_labeling_assigned_count = serializers.ReadOnlyField()
-    deco_labeling_worked_count = serializers.ReadOnlyField()
-    deco_labeling_assigned_count = serializers.ReadOnlyField()
-    pattern_labeling_worked_count = serializers.ReadOnlyField()
-    pattern_labeling_assigned_count = serializers.ReadOnlyField()
 
     class Meta:
         model = MyUser
@@ -84,7 +78,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'handle_labeling_image_id',
                   'charm_labeling_image_id',
                   'deco_labeling_image_id',
-                  'pattern_labeling_image_id',]
+                  'pattern_labeling_image_id'
+                  ]
 
     def get_boxing_assigned_count(self, myuser):
         count = myuser.assigned_original_images.count()
@@ -99,7 +94,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return count
 
     def get_total_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(valid=True).count()
+        queryset = myuser.assigned_cropped_images.categories.filter(color_source__isnull=True, shape_source__isnull=True, handle_source__isnull=True)
+        count = queryset.filter(charm_source__isnull=True, deco_source__isnull=True, pattern_source__isnull=True).count()
         return count
 
     def get_color_labeling_worked_count(self, myuser):

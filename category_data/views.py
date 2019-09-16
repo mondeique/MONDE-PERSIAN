@@ -93,32 +93,32 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
 
     def color_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(color_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__color_source__isnull=True).order_by('pk').first()
         return image.id
 
     def shape_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(shape_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__shape_source__isnull=True).order_by('pk').first()
         return image.id
 
     def handle_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(handle_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__handle_source__isnull=True).order_by('pk').first()
         return image.id
 
     def charm_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(charm_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__charm_source__isnull=True).order_by('pk').first()
         return image.id
 
     def deco_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(deco_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__deco_source__isnull=True).order_by('pk').first()
         return image.id
 
     def pattern_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.filter(pattern_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_imagesfilter(categories__pattern_source__isnull=True).order_by('pk').first()
         return image.id
 
 
