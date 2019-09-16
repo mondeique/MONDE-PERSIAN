@@ -143,11 +143,11 @@ class BoxingAssignAPIView(APIView):
 
     def post(self, request, **kwargs):
         user = request.user
-        unassigned_images = self.queryset.filter(assigned_user__isnull=True).exclude(imge="")
+        unassigned_images = self.queryset.filter(assigned_user__isnull=True).exclude(image="")
         images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
         for image in images:
             image.assigned_user = user
-            image.save_valid()
+            image.save_origin_valid()
         return Response(status=status.HTTP_201_CREATED)
 
 

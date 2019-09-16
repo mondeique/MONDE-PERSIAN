@@ -122,15 +122,15 @@ class OriginalImage(models.Model):
     def save(self, *args, **kwargs):
         super(OriginalImage, self).save(*args, **kwargs)
         if not self.image:
-            print('save original image')
             self._save_image()
+
+    def save_origin_valid(self, *args, **kwargs):
+        super(OriginalImage, self).save(*args, **kwargs)
 
     # image_url 을 통해 image 저장
     def _save_image(self):
         from PIL import Image
         resp = requests.get(self.image_url)
-        print('request')
-        print(resp)
         image = Image.open(BytesIO(resp.content))
         width, height = image.size
         left = width * 0.01
@@ -141,7 +141,6 @@ class OriginalImage(models.Model):
         # http://stackoverflow.com/questions/3723220/how-do-you-convert-a-pil-image-to-a-django-file
         crop_io = BytesIO()
         crop_data.save(crop_io, format=self.get_image_extension())
-        print('crop save')
         crop_file = InMemoryUploadedFile(crop_io, None, get_image_filename(self.image), 'image/jpeg', len(crop_io.getvalue()), None)
         self.image.save(get_image_filename(self.image), crop_file, save=False)
         # To avoid recursive save, call super.save
