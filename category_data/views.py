@@ -271,9 +271,8 @@ class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__color_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -288,6 +287,17 @@ class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Shape Labeling 화면 url 입력 시 호출되는 API
@@ -298,9 +308,8 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__shape_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -315,6 +324,17 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Handle Labeling 화면 url 입력 시 호출되는 API
@@ -325,9 +345,8 @@ class HandleLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__handle_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -342,6 +361,17 @@ class HandleLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Charm Labeling 화면 url 입력 시 호출되는 API
@@ -352,9 +382,8 @@ class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__charm_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -369,6 +398,17 @@ class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Deco Labeling 화면 url 입력 시 호출되는 API
@@ -379,9 +419,8 @@ class DecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__deco_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -396,6 +435,17 @@ class DecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Pattern Labeling 화면 url 입력 시 호출되는 API
@@ -406,9 +456,8 @@ class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(valid=False).exclude(image="")
+        left_images = images.filter(categories__pattern_source__isnull=False).exclude(image="")
         image_url = self.get_image_url().data
-        print(image_url)
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images,
@@ -423,6 +472,17 @@ class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
         _, image = self.get_image()
         image_url = image.image.url
         return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        user = self.request.user
+        images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
 
 
 # Labeling Image 삭제 시 호출되는 API

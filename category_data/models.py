@@ -115,9 +115,7 @@ class OriginalImage(models.Model):
     @property
     def next_id(self):
         next_id = OriginalImage.objects.filter(pk__gt=self.pk).order_by('pk').first().pk
-        if next_id:
-            return next_id
-        return None
+        return next_id
 
     def save(self, *args, **kwargs):
         super(OriginalImage, self).save(*args, **kwargs)
@@ -150,7 +148,7 @@ class OriginalImage(models.Model):
 class CroppedImage(models.Model):
 
     assigned_user = models.ForeignKey(MyUser, null=True, blank=True, on_delete=models.CASCADE, related_name='assigned_cropped_images')
-    origin_source = models.ForeignKey(OriginalImage, null=True, blank=True, related_name='cropped_images', on_delete=models.CASCADE)
+    origin_source = models.ForeignKey(OriginalImage, related_name='cropped_images', on_delete=models.CASCADE)
     left = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     top = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     right = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
@@ -198,10 +196,6 @@ class CroppedImage(models.Model):
         if self.id:
             return 'B%d' % self.id
         return ''
-
-    @property
-    def image_URL(self):
-        return self.image.url
 
     def _save_cropped_image(self):
         from PIL import Image
