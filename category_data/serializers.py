@@ -214,7 +214,7 @@ class OriginalImageRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OriginalImage
-        fields = ['original_image_id','image_url']
+        fields = ['original_image_id', 'image_url']
 
 
 # Original Image 생성 시리얼라이저
@@ -248,30 +248,22 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
+        return next_image.id
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
+        return prev_image.id
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
+        return next_image.id
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
+        return prev_image.id
 
     def get_box_info(self, image):
         cropped_image = image.cropped_images.last()
@@ -292,6 +284,7 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
 
 # Boxing 생성 시리얼라이저
 class BoxCreateUpdateSerializer(serializers.ModelSerializer):
+    origin_source = serializers.SerializerMethodField()
 
     class Meta:
         model = CroppedImage
@@ -299,7 +292,12 @@ class BoxCreateUpdateSerializer(serializers.ModelSerializer):
                   'left',
                   'top',
                   'right',
-                  'bottom']
+                  'bottom',
+                  'origin_source']
+
+    def get_origin_source(self):
+        origin_source = self.context['origin_source']
+        return origin_source
 
 
 # Color Labeling 화면 조회 시리얼라이저
