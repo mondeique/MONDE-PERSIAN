@@ -57,6 +57,7 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     charm_labeling_image_id = serializers.SerializerMethodField()
     deco_labeling_image_id = serializers.SerializerMethodField()
     pattern_labeling_image_id = serializers.SerializerMethodField()
+    worker_id = serializers.SerializerMethodField()
 
     class Meta:
         model = MyUser
@@ -78,7 +79,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'handle_labeling_image_id',
                   'charm_labeling_image_id',
                   'deco_labeling_image_id',
-                  'pattern_labeling_image_id'
+                  'pattern_labeling_image_id',
+                  'worker_id'
                   ]
 
     def get_boxing_assigned_count(self, myuser):
@@ -143,6 +145,10 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_pattern_labeling_image_id(self, validated_data):
         return self.context['pattern_labeling_image_id']
 
+    def get_worker_id(self, myuser):
+        worker_list = list(myuser.objects.filter(is_admin=False).values('id'))
+        return worker_list
+
 
 # 알바 관리 page 조회 시리얼라이저
 class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
@@ -173,31 +179,32 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
         return count
 
     def get_total_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(valid=True).count()
+        queryset = myuser.assigned_cropped_images.categories.filter(color_source__isnull=True, shape_source__isnull=True, handle_source__isnull=True)
+        count = queryset.filter(charm_source__isnull=True, deco_source__isnull=True, pattern_source__isnull=True).count()
         return count
 
     def get_color_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.color_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(color_source__isnull=False).count()
         return count
 
     def get_shape_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.shape_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(shape_source__isnull=False).count()
         return count
 
     def get_handle_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.handle_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(handle_source__isnull=False).count()
         return count
 
     def get_charm_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.charm_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(charm_source__isnull=False).count()
         return count
 
     def get_deco_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.deco_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(deco_source__isnull=False).count()
         return count
 
     def get_pattern_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.pattern_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(pattern_source__isnull=False).count()
         return count
 
 
