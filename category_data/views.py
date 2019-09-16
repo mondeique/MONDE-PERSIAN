@@ -74,7 +74,6 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
-        print('get')
         serializer = self.serializer_class(user, context={'boxing_image_id': self.boxing_image_id(),
                                                           'color_labeling_image_id': self.color_labeling_image_id(),
                                                           'shape_labeling_image_id': self.shape_labeling_image_id(),
@@ -90,52 +89,37 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def boxing_image_id(self):
         user = self.get_object()
         image = user.assigned_original_images.filter(valid=None).order_by('pk').first()
-        print(image)
-        if image:
-            return image.id
-        return None
+        return image.id
 
     def color_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.color_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(color_source__isnull=True).order_by('pk').first()
+        return image.id
 
     def shape_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.shape_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(shape_source__isnull=True).order_by('pk').first()
+        return image.id
 
     def handle_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.handle_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(handle_source__isnull=True).order_by('pk').first()
+        return image.id
 
     def charm_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.charm_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(charm_source__isnull=True).order_by('pk').first()
+        return image.id
 
     def deco_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.deco_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(deco_source__isnull=True).order_by('pk').first()
+        return image.id
 
     def pattern_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.categories.pattern_source.filter(null=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+        image = user.assigned_cropped_images.categories.filter(pattern_source__isnull=True).order_by('pk').first()
+        return image.id
 
 
 # 알바 관리 page 버튼을 눌렀을 때 호출되는 API

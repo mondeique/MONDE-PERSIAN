@@ -68,22 +68,16 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         model = MyUser
         fields = ['username',
                   'id',
-                  'boxing_worked_count',
                   'boxing_assigned_count',
-                  'color_labeling_worked_count',
-                  'color_labeling_assigned_count',
-                  'shape_labeling_worked_count',
-                  'shape_labeling_assigned_count',
-                  'handle_labeling_worked_count',
-                  'handle_labeling_assigned_count',
-                  'charm_labeling_worked_count',
-                  'charm_labeling_assigned_count',
-                  'deco_labeling_worked_count',
-                  'deco_labeling_assigned_count',
-                  'pattern_labeling_worked_count',
-                  'pattern_labeling_assigned_count',
+                  'labeling_assigned_count',
                   'total_boxing_worked_count',
                   'total_labeling_worked_count',
+                  'color_labeling_worked_count',
+                  'shape_labeling_worked_count',
+                  'handle_labeling_worked_count',
+                  'charm_labeling_worked_count',
+                  'deco_labeling_worked_count',
+                  'pattern_labeling_worked_count',
                   'boxing_image_id',
                   'color_labeling_image_id',
                   'shape_labeling_image_id',
@@ -91,6 +85,14 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'charm_labeling_image_id',
                   'deco_labeling_image_id',
                   'pattern_labeling_image_id',]
+
+    def get_boxing_assigned_count(self, myuser):
+        count = myuser.assigned_original_images.count()
+        return count
+
+    def get_labeling_assigned_count(self, myuser):
+        count = myuser.assigned_cropped_images.count()
+        return count
 
     def get_total_boxing_worked_count(self, myuser):
         count = myuser.assigned_original_images.filter(valid=True).count()
@@ -101,27 +103,27 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return count
 
     def get_color_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.color_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(color_source__isnull=False).count()
         return count
 
     def get_shape_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.shape_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(shape_source__isnull=False).count()
         return count
 
     def get_handle_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.handle_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(handle_source__isnull=False).count()
         return count
 
     def get_charm_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.charm_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(charm_source__isnull=False).count()
         return count
 
     def get_deco_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.deco_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(deco_source__isnull=False).count()
         return count
 
     def get_pattern_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.categories.pattern_source.filter(null=False).count()
+        count = myuser.assigned_cropped_images.categories.filter(pattern_source__isnull=False).count()
         return count
 
     def get_boxing_image_id(self, validated_data):

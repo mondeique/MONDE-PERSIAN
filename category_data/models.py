@@ -91,96 +91,6 @@ class MyUser(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
-    @property
-    def boxing_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_original_images.filter(valid=True).count()
-        return images_count
-
-    @property
-    def boxing_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_original_images.count()
-        return images_count
-
-    @property
-    def color_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.colors.filter(null=False).count()
-        return images_count
-
-    @property
-    def color_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.colors.count()
-        print(images_count)
-        return images_count
-
-    @property
-    def shape_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.shapes.filter(null=False).count()
-        return images_count
-
-    @property
-    def shape_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.shapes.count()
-        print(images_count)
-        return images_count
-
-    @property
-    def charm_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.charms.filter(null=False).count()
-        return images_count
-
-    @property
-    def charm_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.charms.count()
-        print(images_count)
-        return images_count
-
-    @property
-    def handle_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.handles.filter(null=False).count()
-        return images_count
-
-    @property
-    def handle_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.handles.count()
-        print(images_count)
-        return images_count
-
-    @property
-    def pattern_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.patterns.filter(null=False).count()
-        return images_count
-
-    @property
-    def pattern_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.patterns.count()
-        print(images_count)
-        return images_count
-
-    @property
-    def deco_labeling_worked_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.decorations.filter(null=False).count()
-        return images_count
-
-    @property
-    def deco_labeling_assigned_count(self):
-        user = MyUser.objects.get(pk=self.pk)
-        images_count = user.assigned_cropped_images.categories.decorations.count()
-        print(images_count)
-        return images_count
-
 
 User = get_user_model()
 
@@ -190,7 +100,6 @@ class OriginalImage(models.Model):
     assigned_user = models.ForeignKey(MyUser, null=True, blank=True, on_delete=models.CASCADE, related_name='assigned_original_images')
     image_url = models.URLField(max_length=300)
     valid = models.NullBooleanField()
-    # TODO: 이름
     image = models.ImageField(upload_to='original-bag-images-dev', null=True, blank=True)
 
     class Meta:
@@ -249,14 +158,6 @@ class CroppedImage(models.Model):
     bottom = models.DecimalField(max_digits=PRECISION + 1, decimal_places=PRECISION)
     image = models.ImageField(upload_to='cropped-bag-images-dev', null=True, blank=True)
     image_url = models.URLField(null=True,blank=True, max_length=250, verbose_name='aws s3 이미지 url')
-    color_valid = models.BooleanField(default=False)
-    shape_valid = models.BooleanField(default=False)
-    handle_valid = models.BooleanField(default=False)
-    charm_valid = models.BooleanField(default=False)
-    deco_valid = models.BooleanField(default=False)
-    pattern_valid = models.BooleanField(default=False)
-    valid = models.BooleanField(default=False)
-    usable = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = '[2] Cropped Image'
