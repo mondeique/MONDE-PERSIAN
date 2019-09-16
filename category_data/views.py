@@ -516,8 +516,9 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.color_source.last()
-        cropped_image.categories.color_source.objects.update(color_source=category)
+        color_data = self.get_category_data()
+        cropped_image.categories.color_source.color_source = color_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -527,10 +528,8 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         color_data = {
             'color': int(data['color']),
-            'cropped_image': cropped_image
                       }
         return color_data
 
@@ -550,8 +549,9 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.shape_source.last()
-        cropped_image.categories.shape_source.objects.update(shape_source=category)
+        shape_data = self.get_category_data()
+        cropped_image.categories.shape_source.shape_source = shape_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -561,10 +561,8 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         shape_data = {
             'shape': int(data['shape']),
-            'cropped_image': cropped_image
                       }
         return shape_data
 
@@ -584,8 +582,9 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.handle_source.last()
-        cropped_image.categories.handle_source.objects.update(handle_source=category)
+        handle_data = self.get_category_data()
+        cropped_image.categories.handle_source.handle_source = handle_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -595,10 +594,8 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         handle_data = {
             'handle': int(data['handle']),
-            'cropped_image': cropped_image
                       }
         return handle_data
 
@@ -618,8 +615,9 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.charm_source.last()
-        cropped_image.categories.charm_source.objects.update(charm_source=category)
+        charm_data = self.get_category_data()
+        cropped_image.categories.charm_source.charm_source = charm_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -629,10 +627,8 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         charm_data = {
             'charm': int(data['charm']),
-            'cropped_image': cropped_image
                       }
         return charm_data
 
@@ -652,8 +648,9 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.deco_source.last()
-        cropped_image.categories.deco_source.objects.update(deco_source=category)
+        deco_data = self.get_category_data()
+        cropped_image.categories.deco_source.deco_source = deco_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -663,10 +660,8 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         deco_data = {
             'deco': int(data['deco']),
-            'cropped_image': cropped_image
                       }
         return deco_data
 
@@ -686,8 +681,9 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        category = cropped_image.categories.pattern_source.last()
-        cropped_image.categories.pattern_source.objects.update(pattern_source=category)
+        pattern_data = self.get_category_data()
+        cropped_image.categories.pattern_source.pattern_source = pattern_data
+        cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -697,10 +693,8 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
 
     def get_category_data(self):
         data = self.request.data
-        cropped_image = self.get_object()
         pattern_data = {
             'pattern': int(data['pattern']),
-            'cropped_image': cropped_image
                       }
         return pattern_data
 
