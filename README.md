@@ -23,11 +23,10 @@ $ LDFLAGS=-L/usr/local/opt/openssl/lib pip install mysqlclient
 - LabelingAssignAPIView : Labeling 할당받기 버튼을 눌렀을 때 호출되는 API
 - OriginalImageCreateAPIView : Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 하는 API)
 ### Boxing page
-- BoxingRetrieveAPIView : Boxing 화면 url 입력 시 호출되는 API
+- BoxingRetrieveAPIView : Boxing 화면 original_image_id url 입력 시 호출되는 API
 - BoxingCreateUpdateAPI : Box 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
 - BoxingDestroyAPIView : Box 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
-- BoxingHoldAPIView : Box의 모양이 그대로 남아있는 holding 될 때 호출되는 API (maybe deprecated)
 ### Labeling page
-- LabelingRetrieveAPIView : Labeling 화면 url 입력 시 호출되는 API
+- LabelingRetrieveAPIView : Labeling 화면 cropped_image_id url 입력 시 호출되는 API
 - LabelingDestroyAPIView : Labeling Image 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
 - LabelCreateUpdateAPI (6개) : 각 Label 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
