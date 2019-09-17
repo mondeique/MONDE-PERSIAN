@@ -89,7 +89,6 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def boxing_image_id(self):
         user = self.get_object()
         image = user.assigned_original_images.filter(valid=False).order_by('pk').first()
-        print(image)
         if image:
             return image.id
         return None
@@ -147,7 +146,6 @@ class WorkerManageRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         # id = self.kwargs['user_id']
-        #TODO : 한번에 보는게 나을 것 같아서 수정함
         worker = self.get_queryset()
         serializer = self.serializer_class(worker, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -190,7 +188,6 @@ class LabelingAssignAPIView(generics.CreateAPIView):
 
 
 #  Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 함)
-#TODO : 이 API는 csv 업로드 할 때 사용한 API이다. 이것만 있어선 사용 불가. 다른 업로드 버튼 구현한 코드와 같이 사용해야함.
 class OriginalImageCreateAPIView(generics.CreateAPIView):
     """
     csv file upload
@@ -216,7 +213,7 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         id = self.kwargs['original_image_id']
         images = self.get_queryset()
-        left_images = images.filter(valid=None)
+        left_images = images.filter(valid=False)
         image = images.filter(pk=id).last()
 
         if image:
@@ -274,17 +271,23 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
     def put(self, request, *args, **kwargs):
         original_image = self.get_original_image()
         cropped_image = self.queryset.get(origin_source=original_image)
-        serializer = self.serializer_class(data=request.data)
-        #TODO : client에서 준 Data가 유효한 형식인지 검증 후 사용. 만약 에러나면 이렇게 안해도 됨
-        serializer.is_valid(raise_exception=True)
-        cropped_image.update(**serializer.validated_data)
+        l,r,t,b = self.get_ltrb()
+        cropped_image.update(l,t,r,b)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
-    #TODO : get_object 역할은 따로 있기 때문에 다른 메서드로 바꿈
     def get_original_image(self, *args, **kwargs):
         id = self.kwargs['original_image_id']
         original_image = OriginalImage.objects.filter(pk=id).last()
         return original_image
+
+    # def get_serializer_context(self, *args, **kwargs):
+    #     id = self.kwargs['original_image_id']
+    #     original_image = OriginalImage.objects.filter(pk=id).last()
+    #     if original_image:
+    #         return {'request': self.request,
+    #                 'original_image': original_image, }
+    #     else:
+    #         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def get_ltrb(self):
         data = self.request.data
@@ -298,6 +301,7 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
             print('원본')
             return (0,1,0,1)
 
+
 # Box 삭제 시 호출되는 API
 class BoxingDestroyAPIView(generics.DestroyAPIView):
     """
@@ -309,6 +313,10 @@ class BoxingDestroyAPIView(generics.DestroyAPIView):
     def post(self, request, *args, **kwargs):
         return super(BoxingDestroyAPIView, self).destroy(request, *args, **kwargs)
 
+    def get_object(self):
+        id = self.kwargs['original_image_id']
+        return self.queryset.get(pk=id)
+
 
 # Color Labeling 화면 url 입력 시 호출되는 API
 class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
@@ -318,7 +326,7 @@ class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__color_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__color_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -361,7 +369,7 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__shape_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__shape_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -398,7 +406,7 @@ class HandleLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__handle_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__handle_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -435,7 +443,7 @@ class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__charm_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__charm_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -472,7 +480,7 @@ class DecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__deco_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__deco_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -509,7 +517,7 @@ class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__pattern_source__isnull=False).exclude(image="")
+        left_images = images.filter(categories__pattern_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -563,15 +571,15 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         color_data = self.get_category_data()
-        cropped_image.categories.color_source.objects.create(**color_data)
-        cropped_image.save_valid()
+        Categories.objects.create(color_source=color_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        color_category = Categories.objects.get(cropped_source=cropped_image)
         color_data = self.get_category_data()
-        cropped_image.categories.color_source.color_source = color_data
-        cropped_image.categories.save()
+        color_category.color_source = color_data
+        color_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -581,10 +589,9 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        color_data = {
-            'color': int(data['color']),
-                      }
-        return color_data
+        color_data = int(data['color'])
+        color = ColorTag.objects.get(pk=color_data)
+        return color
 
 
 # Shape Label 생성 및 업데이트 시 호출되는 API
@@ -596,16 +603,15 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         shape_data = self.get_category_data()
-        Categories.objects.create(shape_source=shape_data,
-                cropped_source=cropped_image)
-        cropped_image.save_valid()
+        Categories.objects.create(shape_source=shape_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        shape_category = Categories.objects.get(cropped_source=cropped_image)
         shape_data = self.get_category_data()
-        cropped_image.categories.shape_source = shape_data
-        cropped_image.categories.save()
+        shape_category.shape_source = shape_data
+        shape_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -616,7 +622,6 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def get_category_data(self):
         data = self.request.data
         shape_data = int(data['shape'])
-        print(shape_data)
         shape = ShapeTag.objects.get(pk=shape_data)
         return shape
 
@@ -630,15 +635,15 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         handle_data = self.get_category_data()
-        cropped_image.categories.handle_source.objects.create(**handle_data)
-        cropped_image.save_valid()
+        Categories.objects.create(handle_source=handle_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        handle_category = Categories.objects.get(cropped_source=cropped_image)
         handle_data = self.get_category_data()
-        cropped_image.categories.handle_source.handle_source = handle_data
-        cropped_image.categories.save()
+        handle_category.handle_source = handle_data
+        handle_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -648,10 +653,9 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
 
     def get_category_data(self):
         data = self.request.data
-        handle_data = {
-            'handle': int(data['handle']),
-                      }
-        return handle_data
+        handle_data = int(data['handle'])
+        handle = HandleTag.objects.get(pk=handle_data)
+        return handle
 
 
 # Charm Label 생성 및 업데이트 시 호출되는 API
@@ -663,15 +667,15 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         charm_data = self.get_category_data()
-        cropped_image.categories.charm_source.objects.create(**charm_data)
-        cropped_image.save_valid()
+        Categories.objects.create(charm_source=charm_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        charm_category = Categories.objects.get(cropped_source=cropped_image)
         charm_data = self.get_category_data()
-        cropped_image.categories.charm_source.charm_source = charm_data
-        cropped_image.categories.save()
+        charm_category.charm_source = charm_data
+        charm_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -681,10 +685,9 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        charm_data = {
-            'charm': int(data['charm']),
-                      }
-        return charm_data
+        charm_data = int(data['charm'])
+        charm = CharmTag.objects.get(pk=charm_data)
+        return charm
 
 
 # Deco Label 생성 및 업데이트 시 호출되는 API
@@ -696,15 +699,15 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         deco_data = self.get_category_data()
-        cropped_image.categories.deco_source.objects.create(**deco_data)
-        cropped_image.save_valid()
+        Categories.objects.create(deco_source=deco_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        deco_category = Categories.objects.get(cropped_source=cropped_image)
         deco_data = self.get_category_data()
-        cropped_image.categories.deco_source.deco_source = deco_data
-        cropped_image.categories.save()
+        deco_category.deco_source = deco_data
+        deco_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -714,10 +717,9 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
 
     def get_category_data(self):
         data = self.request.data
-        deco_data = {
-            'deco': int(data['deco']),
-                      }
-        return deco_data
+        deco_data = int(data['deco'])
+        deco = DecoTag.objects.get(pk=deco_data)
+        return deco
 
 
 # Pattern Label 생성 및 업데이트 시 호출되는 API
@@ -729,15 +731,15 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         pattern_data = self.get_category_data()
-        cropped_image.categories.pattern_source.objects.create(**pattern_data)
-        cropped_image.save_valid()
+        Categories.objects.create(pattern_source=pattern_data, cropped_source=cropped_image)
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
+        pattern_category = Categories.objects.get(cropped_source=cropped_image)
         pattern_data = self.get_category_data()
-        cropped_image.categories.pattern_source.pattern_source = pattern_data
-        cropped_image.categories.save()
+        pattern_category.pattern_source = pattern_data
+        pattern_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -747,8 +749,7 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
 
     def get_category_data(self):
         data = self.request.data
-        pattern_data = {
-            'pattern': int(data['pattern']),
-                      }
-        return pattern_data
+        pattern_data = int(data['pattern'])
+        pattern = PatternTag.objects.get(pk=pattern_data)
+        return pattern
 

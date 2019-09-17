@@ -40,11 +40,10 @@ class LoginUserSerializer(serializers.Serializer):
 
 # Home(Main 화면) 조회 시리얼라이저
 class UserHomeRetrieveSerializer(serializers.ModelSerializer):
-    boxing_assigned_count = serializers.ReadOnlyField()
-    labeling_assigned_count = serializers.ReadOnlyField()
+    boxing_assigned_count = serializers.SerializerMethodField()
+    labeling_assigned_count = serializers.SerializerMethodField()
     total_boxing_worked_count = serializers.SerializerMethodField()
     total_labeling_worked_count = serializers.SerializerMethodField()
-    # TODO : ReadOnlyField()는 모델에서 필드 참조할때 사용. 여기선 SerializerMethodField()
     color_labeling_worked_count = serializers.SerializerMethodField()
     shape_labeling_worked_count = serializers.SerializerMethodField()
     handle_labeling_worked_count = serializers.SerializerMethodField()
@@ -160,7 +159,6 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
 class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
     total_boxing_worked_count = serializers.SerializerMethodField()
     total_labeling_worked_count = serializers.SerializerMethodField()
-    #TODO : 마찬가지로 def get_field_name() 을 사용하려면 SerializerMethodField()
     color_labeling_worked_count = serializers.SerializerMethodField()
     shape_labeling_worked_count = serializers.SerializerMethodField()
     handle_labeling_worked_count = serializers.SerializerMethodField()
@@ -455,12 +453,12 @@ class ShapeLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_shape_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             shape = categories.shape_source
-            data = {
-                'shape': shape,
-            }
+            print(shape)
+            data = {'shape': str(shape)}
+            print(data)
         else:
             data = None
         return data
