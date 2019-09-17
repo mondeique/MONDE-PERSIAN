@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from data_management.loader import load_credential
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -81,10 +83,10 @@ WSGI_APPLICATION = 'data_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'MONDE-data-server',
-        'USER': 'MONDEIQUE-data',
-        'PASSWORD': 'DataManage123',
-        'HOST': 'localhost',
+        'NAME': 'monde_data_server',
+        'USER': load_credential("DATABASE_USERNAME", ""),
+        'PASSWORD': load_credential("DATABASE_PASSWORD", ""),
+        'HOST': 'choco-database.ckanfuynig82.ap-northeast-2.rds.amazonaws.com',
         'PORT': '',
     }
 }
