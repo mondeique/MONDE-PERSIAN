@@ -245,6 +245,11 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
                  'valid_next_id',
                  'valid_prev_id',]
 
+    def get_image_url(self, image):
+        if image.s3_image_url:
+            return image.s3_image_url
+        return image.image_url
+
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()

@@ -231,10 +231,12 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
     def post(self, request, *args, **kwargs):
         original_image = self.get_object()
-        serializer = self.serializer_class(data=request.data, context={'origin_source':self.get_object()})
+        serializer = self.serializer_class(data=request.data, context={'origin_source': self.get_object()})
         serializer.is_valid()
         serializer.save()
         original_image.valid = True
+        if original_image.s3_image_url:
+            return Response({}, status=status.HTTP_201_CREATED)
         original_image.save()
         return Response({}, status=status.HTTP_201_CREATED)
 

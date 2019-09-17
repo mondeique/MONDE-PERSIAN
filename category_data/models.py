@@ -98,9 +98,10 @@ User = get_user_model()
 class OriginalImage(models.Model):
 
     assigned_user = models.ForeignKey(MyUser, null=True, blank=True, on_delete=models.CASCADE, related_name='assigned_original_images')
-    image_url = models.URLField(max_length=300)
-    valid = models.NullBooleanField()
+    image_url = models.URLField(max_length=300, null=True)
+    valid = models.NullBooleanField(default=False)
     image = models.ImageField(upload_to='original-bag-images-dev', null=True, blank=True)
+    s3_image_url = models.URLField(max_length=300, null=True)
 
     class Meta:
         verbose_name = '[1] Original Image'

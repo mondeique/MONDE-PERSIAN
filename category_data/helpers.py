@@ -2,6 +2,11 @@ import io
 import csv
 import random
 import string
+import os
+from rest_framework import status
+from rest_framework.response import Response
+from data_management.loader import load_credential
+import boto3
 
 
 def load_csv_data(csv_file):
@@ -28,3 +33,12 @@ def is_jpg(url):
 def generate_filename(n):
     KEY_SOURCE = string.ascii_letters + string.digits
     return ''.join(random.choice(KEY_SOURCE) for _ in range(n))
+
+
+def load_to_s3(folder_name):
+    current_path = os.getcwd()
+    folder_path = os.path.join(current_path, folder_name)
+    file_list = os.listdir(folder_path)
+    for image in file_list:
+        s3.upload_file(os.path.join(folder_path + image), 'original-bag-images-dev', generate_filename(10))
+    return Response({}, status=status.HTTP_201_CREATED)
