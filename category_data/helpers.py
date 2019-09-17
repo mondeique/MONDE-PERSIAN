@@ -14,7 +14,6 @@ def load_csv_data(csv_file):
     bag_url_list = []
     for line in reader:
         status = is_jpg(line)
-        print(line[0])
         if is_jpg(line[0]):
             bag_url_list.append(line[0])
     return bag_url_list
@@ -22,9 +21,7 @@ def load_csv_data(csv_file):
 
 def is_jpg(url):
     jpg = '.jpg'
-    print('url')
     if jpg in url:
-        print('ojkokjoo')
         return True
 
 
