@@ -24,7 +24,8 @@ app_name = 'category'
 urlpatterns = [
     path('api/import/original-images', OriginalImageCreateAPIView.as_view(), name='import_image'),
     path('api/home', HomeRetrieveAPIView.as_view(), name='home'),
-    path('api/worker/<int:user_id>', WorkerManageRetrieveAPIView.as_view(), name='worker'),
+    #TODO : 한번에 보는게 좋을것 같아서 수정함
+    path('api/worker', WorkerManageRetrieveAPIView.as_view(), name='worker'),
     path('api/boxing/<int:original_image_id>', BoxingRetrieveAPIView.as_view()),
     path('api/colorlabeling/<int:cropped_image_id>', ColorLabelingRetrieveAPIView.as_view()),
     path('api/shapelabeling/<int:cropped_image_id>', ShapeLabelingRetrieveAPIView.as_view()),
@@ -44,4 +45,8 @@ urlpatterns = [
     path('api/image/delete/<int:original_image_id>', BoxingDestroyAPIView.as_view()),
     path('api/cropimage/delete/<int:cropped_image_id>', LabelingDestroyAPIView.as_view()),
     path('import/', TemplateView.as_view(template_name='working_page/import_csv.html')),
+
+    path('api/auth/login', LoginAPI.as_view()),
+    path('api/auth/user', UserAPI.as_view()),
+    path('api/auth/register', RegistrationAPI.as_view()),
     ]

@@ -89,49 +89,66 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def boxing_image_id(self):
         user = self.get_object()
         image = user.assigned_original_images.filter(valid=None).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def color_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__color_source__isnull=True).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def shape_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__shape_source__isnull=True).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def handle_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__handle_source__isnull=True).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def charm_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__charm_source__isnull=True).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def deco_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__deco_source__isnull=True).order_by('pk').first()
-        return image.id
+        if image:
+            return image.id
+        return None
 
     def pattern_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_imagesfilter(categories__pattern_source__isnull=True).order_by('pk').first()
-        return image.id
+        image = user.assigned_cropped_images.filter(categories__pattern_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
 
 
 # 알바 관리 page 버튼을 눌렀을 때 호출되는 API
 class WorkerManageRetrieveAPIView(generics.RetrieveAPIView):
+    #TODO : permission 으로 추가해도 됨 (admin만 접근 가능하게)
+    #https: // www.django - rest - framework.org / api - guide / permissions /
     permission_classes = (IsAuthenticated,)
     queryset = MyUser.objects.filter(is_admin=False)
     serializer_class = WorkerManageRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        id = self.kwargs['user_id']
-        worker = self.queryset.get(pk=id)
-        serializer = self.serializer_class(worker)
+        # id = self.kwargs['user_id']
+        #TODO : 한번에 보는게 나을 것 같아서 수정함
+        worker = self.get_queryset()
+        serializer = self.serializer_class(worker, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -167,6 +184,7 @@ class LabelingAssignAPIView(generics.CreateAPIView):
 
 
 #  Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 함)
+#TODO : 이 API는 csv 업로드 할 때 사용한 API이다. 이것만 있어선 사용 불가. 다른 업로드 버튼 구현한 코드와 같이 사용해야함.
 class OriginalImageCreateAPIView(generics.CreateAPIView):
     """
     csv file upload
@@ -192,8 +210,9 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         id = self.kwargs['original_image_id']
         images = self.get_queryset()
-        image = images.filter(pk=id).last()
         left_images = images.filter(valid=None)
+        image = images.filter(pk=id).last()
+
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
                                                                'images': images})
@@ -230,8 +249,8 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
     serializer_class = BoxCreateUpdateSerializer
 
     def post(self, request, *args, **kwargs):
-        original_image = self.get_object()
-        serializer = self.serializer_class(data=request.data, context={'origin_source': self.get_object()})
+        original_image = self.get_original_image()
+        serializer = self.serializer_class(data=request.data, context={'origin_source': original_image})
         serializer.is_valid()
         serializer.save()
         original_image.valid = True
@@ -241,13 +260,16 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
-        original_image = self.get_object()
+        original_image = self.get_original_image()
         cropped_image = self.queryset.get(origin_source=original_image)
         serializer = self.serializer_class(data=request.data)
-        cropped_image.update(serializer.data)
+        #TODO : client에서 준 Data가 유효한 형식인지 검증 후 사용. 만약 에러나면 이렇게 안해도 됨
+        serializer.is_valid(raise_exception=True)
+        cropped_image.update(**serializer.validated_data)
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
-    def get_object(self):
+    #TODO : get_object 역할은 따로 있기 때문에 다른 메서드로 바꿈
+    def get_original_image(self, *args, **kwargs):
         id = self.kwargs['original_image_id']
         original_image = OriginalImage.objects.filter(pk=id).last()
         return original_image
@@ -287,8 +309,14 @@ class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
     @retry
     def get_image_url(self):
         _, image = self.get_image()
-        image_url = image.image.url
-        return Response(image_url, status=status.HTTP_200_OK)
+        if image:
+            image_url = image.image.url
+            return Response(image_url, status=status.HTTP_200_OK)
+
+        else:
+            image_url = None
+            return Response(image_url, status=status.HTTP_204_NO_CONTENT)
+
 
     def get_queryset(self):
         user = self.request.user
