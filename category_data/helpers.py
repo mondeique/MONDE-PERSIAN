@@ -14,8 +14,8 @@ def load_csv_data(csv_file):
     io_string = io.StringIO(csv_file)
     reader = csv.reader(io_string, delimiter=',')
     header = next(reader)
-    index = dict()
-    index['bag_url'] = header.index('url')
+    print(header)
+    print('0-------0')
     bag_url_list = []
     for line in reader:
         status = is_jpg(line)

@@ -283,7 +283,7 @@ class Categories(models.Model):
     class Meta:
         verbose_name = '[3-0] Categorie'
 
-    version = models.IntegerField()
+    version = models.IntegerField(null=True)
     cropped_source = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
     color_source = models.OneToOneField(ColorTag, null=True, on_delete=models.CASCADE)
     shape_source = models.OneToOneField(ShapeTag, null=True, on_delete=models.CASCADE)

@@ -1,5 +1,33 @@
 from django.contrib import admin
 from category_data.models import *
+from django import forms
+# Register your models here.
+from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from django.urls import path
+
+
+class CsvImportForm(forms.Form):
+    csv_file = forms.FileField(widget=forms.FileInput(attrs={'accept': ".csv"}))
+
+
+class OriginalImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'image_url']
+
+    def get_urls(self):
+        urls = [path('admin_import_csv/', self.import_csv, name='source_import_csv'),]
+        urls += super().get_urls()
+        return urls
+
+    def import_csv(self, request):
+        if request.method == 'GET':
+            ctx = {
+                'form': CsvImportForm(),
+            }
+            return render(request, 'working_page/csv_form.html', ctx)
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 
 class ColorAdmin(admin.ModelAdmin):
@@ -27,7 +55,7 @@ class PatternAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MyUser)
-admin.site.register(OriginalImage)
+admin.site.register(OriginalImage, OriginalImageAdmin)
 admin.site.register(CroppedImage)
 admin.site.register(ColorTag, ColorAdmin)
 admin.site.register(ShapeTag, ShapeAdmin)

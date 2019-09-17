@@ -1,0 +1,10 @@
+  <div>
+            <form action="{% url 'import_image' %}" method="POST" enctype="multipart/form-data">
+                <br>
+                <br>
+                <br>
+                {{ form.as_p }}
+                {% csrf_token %}
+                <button type="submit">Upload CSV</button>
+            <p>{{ description }}</p>
+        </div>

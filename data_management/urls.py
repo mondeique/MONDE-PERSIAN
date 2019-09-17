@@ -16,12 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.urls import path
 from django.views.generic import TemplateView
-
+from django.contrib import admin
 from category_data.views import *
 
 app_name = 'category'
 
 urlpatterns = [
+    path('admin',admin.site.urls),
     path('api/import/original-images', OriginalImageCreateAPIView.as_view(), name='import_image'),
     path('api/home', HomeRetrieveAPIView.as_view(), name='home'),
     #TODO : 한번에 보는게 좋을것 같아서 수정함
@@ -46,7 +47,7 @@ urlpatterns = [
     path('api/cropimage/delete/<int:cropped_image_id>', LabelingDestroyAPIView.as_view()),
     path('import/', TemplateView.as_view(template_name='working_page/import_csv.html')),
 
-    path('api/auth/login', LoginAPI.as_view()),
+    path('api/auth/login', LoginAPI.as_view(), name='login'),
     path('api/auth/user', UserAPI.as_view()),
     path('api/auth/register', RegistrationAPI.as_view()),
     ]

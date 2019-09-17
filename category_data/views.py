@@ -11,7 +11,7 @@ from .serializers import *
 from knox.models import AuthToken
 from .helpers import load_csv_data
 
-ASSIGN_SIZE = 50
+ASSIGN_SIZE = 10
 VERSION = 1
 
 
@@ -88,7 +88,8 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
 
     def boxing_image_id(self):
         user = self.get_object()
-        image = user.assigned_original_images.filter(valid=None).order_by('pk').first()
+        image = user.assigned_original_images.filter(valid=False).order_by('pk').first()
+        print(image)
         if image:
             return image.id
         return None
@@ -160,11 +161,16 @@ class BoxingAssignAPIView(APIView):
 
     def post(self, request, **kwargs):
         user = request.user
-        unassigned_images = self.queryset.filter(assigned_user__isnull=True).exclude(image="")
+        print(self.queryset)
+        unassigned_images = self.queryset.filter(assigned_user__isnull=True)
+        print(unassigned_images)
         images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
         for image in images:
+            print('---')
+            print(image)
             image.assigned_user = user
             image.save_origin_valid()
+
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -250,9 +256,15 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
     def post(self, request, *args, **kwargs):
         original_image = self.get_original_image()
-        serializer = self.serializer_class(data=request.data, context={'origin_source': original_image})
-        serializer.is_valid()
-        serializer.save()
+        print(original_image)
+        print(request.data)
+        #serializer = self.serializer_class(data=request.data, context={'origin_source': original_image})
+        #serializer.is_valid()
+        #serializer.save()
+        l,r,t,b = self.get_ltrb()
+        CroppedImage.objects.create(origin_source=original_image,
+                                    left=l, right=r, top=t, bottom=b)
+        print('saved')
         original_image.valid = True
         if original_image.s3_image_url:
             return Response({}, status=status.HTTP_201_CREATED)
@@ -274,6 +286,17 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
         original_image = OriginalImage.objects.filter(pk=id).last()
         return original_image
 
+    def get_ltrb(self):
+        data = self.request.data
+        left = data['left']
+        right = data['right']
+        top = data['top']
+        bottom = data['bottom']
+        if left and right and top and bottom:
+            return (float(left),float(right),float(top),float(bottom))
+        else: #원본
+            print('원본')
+            return (0,1,0,1)
 
 # Box 삭제 시 호출되는 API
 class BoxingDestroyAPIView(generics.DestroyAPIView):
@@ -573,14 +596,15 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         shape_data = self.get_category_data()
-        cropped_image.categories.shape_source.objects.create(**shape_data)
+        Categories.objects.create(shape_source=shape_data,
+                cropped_source=cropped_image)
         cropped_image.save_valid()
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         shape_data = self.get_category_data()
-        cropped_image.categories.shape_source.shape_source = shape_data
+        cropped_image.categories.shape_source = shape_data
         cropped_image.categories.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
@@ -591,10 +615,10 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
 
     def get_category_data(self):
         data = self.request.data
-        shape_data = {
-            'shape': int(data['shape']),
-                      }
-        return shape_data
+        shape_data = int(data['shape'])
+        print(shape_data)
+        shape = ShapeTag.objects.get(pk=shape_data)
+        return shape
 
 
 # Handle Label 생성 및 업데이트 시 호출되는 API
