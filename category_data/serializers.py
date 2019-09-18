@@ -182,41 +182,57 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
                   ]
 
     def get_total_boxing_worked_count(self, myuser):
-        count = myuser.assigned_original_images.filter(valid=True).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_original_images.filter(valid=True).count()
+            return count
+        return None
 
     def get_total_labeling_worked_count(self, myuser):
-        queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
-                                                         categories__shape_source__isnull=False,
-                                                         categories__handle_source__isnull=False,
-                                                         categories__charm_source__isnull=False,
-                                                         categories__deco_source__isnull=False,
-                                                         categories__pattern_source__isnull=False)
-        return queryset.count()
+        if myuser.is_admin:
+            queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
+                                                             categories__shape_source__isnull=False,
+                                                             categories__handle_source__isnull=False,
+                                                             categories__charm_source__isnull=False,
+                                                             categories__deco_source__isnull=False,
+                                                             categories__pattern_source__isnull=False)
+            return queryset.count()
+        return None
 
     def get_color_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
+            return count
+        return None
 
     def get_shape_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False).count()
+            return count
+        return None
 
     def get_handle_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
+            return count
+        return None
 
     def get_charm_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__charm_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__charm_source__isnull=False).count()
+            return count
+        return None
 
     def get_deco_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
+            return count
+        return None
 
     def get_pattern_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__pattern_source__isnull=False).count()
-        return count
+        if myuser.is_admin:
+            count = myuser.assigned_cropped_images.filter(categories__pattern_source__isnull=False).count()
+            return count
+        return None
 
 
 # Original Image 조회 시리얼라이저
