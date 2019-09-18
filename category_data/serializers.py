@@ -96,12 +96,12 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return count
 
     def get_total_labeling_worked_count(self, myuser):
-        queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=True,
-                                                         categories__shape_source__isnull=True,
-                                                         categories__handle_source__isnull=True,
-                                                         categories__charm_source__isnull=True,
-                                                         categories__deco_source__isnull=True,
-                                                         categories__pattern_source__isnull=True)
+        queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
+                                                         categories__shape_source__isnull=False,
+                                                         categories__handle_source__isnull=False,
+                                                         categories__charm_source__isnull=False,
+                                                         categories__deco_source__isnull=False,
+                                                         categories__pattern_source__isnull=False)
         return queryset.count()
 
     def get_color_labeling_worked_count(self, myuser):

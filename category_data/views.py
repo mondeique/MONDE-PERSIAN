@@ -253,15 +253,12 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
     def post(self, request, *args, **kwargs):
         original_image = self.get_original_image()
-        print(original_image)
-        print(request.data)
         #serializer = self.serializer_class(data=request.data, context={'origin_source': original_image})
         #serializer.is_valid()
         #serializer.save()
         l,r,t,b = self.get_ltrb()
         CroppedImage.objects.create(origin_source=original_image,
                                     left=l, right=r, top=t, bottom=b)
-        print('saved')
         original_image.valid = True
         if original_image.s3_image_url:
             return Response({}, status=status.HTTP_201_CREATED)
