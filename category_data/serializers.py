@@ -379,12 +379,10 @@ class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_color_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             color = categories.color_source
-            data = {
-                'color': color,
-            }
+            data = {'color': str(color)}
         else:
             data = None
         return data
@@ -456,9 +454,7 @@ class ShapeLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             shape = categories.shape_source
-            print(shape)
             data = {'shape': str(shape)}
-            print(data)
         else:
             data = None
         return data
@@ -518,12 +514,10 @@ class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_handle_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             handle = categories.handle_source
-            data = {
-                'handle': handle,
-            }
+            data = {'handle': str(handle)}
         else:
             data = None
         return data
@@ -583,12 +577,10 @@ class CharmLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_charm_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             charm = categories.charm_source
-            data = {
-                'charm': charm,
-            }
+            data = {'charm': str(charm)}
         else:
             data = None
         return data
@@ -648,12 +640,10 @@ class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_deco_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             deco = categories.deco_source
-            data = {
-                'deco': deco,
-            }
+            data = {'deco': str(deco)}
         else:
             data = None
         return data
@@ -713,12 +703,10 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_pattern_label_info(self, image):
-        categories = image.categories.filter(version=VERSION).last()
+        categories = image.categories.last()
         if categories:
             pattern = categories.pattern_source
-            data = {
-                'pattern': pattern,
-            }
+            data = {'pattern': str(pattern)}
         else:
             data = None
         return data
