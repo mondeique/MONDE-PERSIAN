@@ -382,7 +382,7 @@ class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             color = categories.color_source
-            data = {'color': str(color)}
+            data = {'color': color.id}
         else:
             data = None
         return data
@@ -454,7 +454,7 @@ class ShapeLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             shape = categories.shape_source
-            data = {'shape': str(shape)}
+            data = {'shape': shape.id}
         else:
             data = None
         return data
@@ -517,7 +517,7 @@ class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             handle = categories.handle_source
-            data = {'handle': str(handle)}
+            data = {'handle': handle.id}
         else:
             data = None
         return data
@@ -580,7 +580,7 @@ class CharmLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             charm = categories.charm_source
-            data = {'charm': str(charm)}
+            data = {'charm': charm.id}
         else:
             data = None
         return data
@@ -643,7 +643,7 @@ class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             deco = categories.deco_source
-            data = {'deco': str(deco)}
+            data = {'deco': deco.id}
         else:
             data = None
         return data
@@ -706,7 +706,7 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
         categories = image.categories.last()
         if categories:
             pattern = categories.pattern_source
-            data = {'pattern': str(pattern)}
+            data = {'pattern': pattern.id}
         else:
             data = None
         return data
