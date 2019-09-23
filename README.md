@@ -6,10 +6,17 @@ MONDEIQUE data management 및 알바 page server repo입니다.
 ```
 $ pip install -r requirements.txt
 ```
-- mysqlclient의 경우 따로 install 해야함 (OSX Mojave에서 지속적인 error 발생)
+- mysqlclient의 경우 따로 install 해야함 
+
+(OSX Mojave)
 ```
 $ brew reinstall openssl
 $ LDFLAGS=-L/usr/local/opt/openssl/lib pip install mysqlclient
+```
+(Ubuntu 18.04 LTS)
+```
+[ubuntu]
+$ sudo apt-get install mysql-client
 ```
 ### How to run
 ```
