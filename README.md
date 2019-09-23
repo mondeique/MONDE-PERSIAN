@@ -11,6 +11,11 @@ $ pip install -r requirements.txt
 $ brew reinstall openssl
 $ LDFLAGS=-L/usr/local/opt/openssl/lib pip install mysqlclient
 ```
+### How to run
+```
+$ ssh ConnectionSSH
+$ python manage.py runserver 0.0.0.0:7989
+```
 ## API
 ### Login page
 - RegistraionAPI : username과 password를 입력하고 회원가입 버튼을 눌렀을 때 호출되는 API
