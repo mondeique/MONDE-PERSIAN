@@ -11,7 +11,7 @@ from .serializers import *
 from knox.models import AuthToken
 from .helpers import load_csv_data
 
-ASSIGN_SIZE = 10
+ASSIGN_SIZE = 50
 VERSION = 1
 
 
@@ -159,13 +159,9 @@ class BoxingAssignAPIView(APIView):
 
     def post(self, request, **kwargs):
         user = request.user
-        print(self.queryset)
         unassigned_images = self.queryset.filter(assigned_user__isnull=True)
-        print(unassigned_images)
         images = unassigned_images.order_by('pk')[:ASSIGN_SIZE]
         for image in images:
-            print('---')
-            print(image)
             image.assigned_user = user
             image.save_origin_valid()
 
