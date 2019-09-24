@@ -203,6 +203,7 @@ class CroppedImage(models.Model):
     def _save_cropped_image(self):
         from PIL import Image
         resp = requests.get(self.image_url)
+        print(resp)
         image = Image.open(BytesIO(resp.content))
         image = image.convert('RGB')
         width, height = image.size
