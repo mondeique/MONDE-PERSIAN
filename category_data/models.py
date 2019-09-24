@@ -132,6 +132,7 @@ class OriginalImage(models.Model):
         from PIL import Image
         resp = requests.get(self.image_url)
         image = Image.open(BytesIO(resp.content))
+        image = image.convert('RGB')
         width, height = image.size
         left = width * 0.01
         top = height * 0.01
