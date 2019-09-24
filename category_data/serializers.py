@@ -279,7 +279,6 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_next_id(self, image):
         images = self.context['images']
-        print(images)
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
         if next_image:
             return next_image.id
@@ -338,7 +337,6 @@ class BoxCreateUpdateSerializer(serializers.ModelSerializer):
 
     def get_origin_source(self):
         origin_source = self.context['origin_source']
-        print(origin_source)
         return origin_source
 
 
