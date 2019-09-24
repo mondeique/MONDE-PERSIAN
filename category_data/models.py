@@ -130,8 +130,14 @@ class OriginalImage(models.Model):
     # image_url 을 통해 image 저장
     def _save_image(self):
         from PIL import Image
-        resp = requests.get(self.image_url)
-        image = Image.open(BytesIO(resp.content))
+        resp = requests.get(self.image_url, headers={'User-Agent': 'Mozilla/5.0'})
+        byteImgIO = BytesIO()
+        byteImg = Image.open(BytesIO(resp.content))
+        byteImg.save(byteImgIO, "JPEG")
+        byteImgIO.seek(0)
+        byteImg = byteImgIO.read()
+        dataBytesIO = BytesIO(byteImg)
+        image = Image.open(dataBytesIO)
         image = image.convert('RGB')
         width, height = image.size
         left = width * 0.01
@@ -202,8 +208,14 @@ class CroppedImage(models.Model):
 
     def _save_cropped_image(self):
         from PIL import Image
-        resp = requests.get(self.origin_source.image_url)
-        image = Image.open(BytesIO(resp.content))
+        resp = requests.get(self.image_url, headers={'User-Agent': 'Mozilla/5.0'})
+        byteImgIO = BytesIO()
+        byteImg = Image.open(BytesIO(resp.content))
+        byteImg.save(byteImgIO, "JPEG")
+        byteImgIO.seek(0)
+        byteImg = byteImgIO.read()
+        dataBytesIO = BytesIO(byteImg)
+        image = Image.open(dataBytesIO)
         image = image.convert('RGB')
         width, height = image.size
         left = width * self.left
