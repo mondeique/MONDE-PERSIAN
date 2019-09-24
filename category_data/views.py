@@ -249,9 +249,6 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
 
     def post(self, request, *args, **kwargs):
         original_image = self.get_original_image()
-        #serializer = self.serializer_class(data=request.data, context={'origin_source': original_image})
-        #serializer.is_valid()
-        #serializer.save()
         l,r,t,b = self.get_ltrb()
         CroppedImage.objects.create(origin_source=original_image,
                                     left=l, right=r, top=t, bottom=b)
@@ -273,15 +270,6 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
         original_image = OriginalImage.objects.filter(pk=id).last()
         return original_image
 
-    # def get_serializer_context(self, *args, **kwargs):
-    #     id = self.kwargs['original_image_id']
-    #     original_image = OriginalImage.objects.filter(pk=id).last()
-    #     if original_image:
-    #         return {'request': self.request,
-    #                 'original_image': original_image, }
-    #     else:
-    #         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
     def get_ltrb(self):
         data = self.request.data
         left = data['left']
@@ -290,7 +278,7 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
         bottom = data['bottom']
         if left and right and top and bottom:
             return (float(left),float(right),float(top),float(bottom))
-        else: #원본
+        else:
             print('원본')
             return (0,1,0,1)
 
@@ -340,7 +328,6 @@ class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
         else:
             image_url = None
             return Response(image_url, status=status.HTTP_204_NO_CONTENT)
-
 
     def get_queryset(self):
         user = self.request.user

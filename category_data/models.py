@@ -123,7 +123,7 @@ class OriginalImage(models.Model):
         if not self.image:
             self._save_image()
 
-    #TODO : fix me better name
+    # TODO : fix me better name
     def save_origin_valid(self, *args, **kwargs):
         super(OriginalImage, self).save(*args, **kwargs)
 

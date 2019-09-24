@@ -152,7 +152,6 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return self.context['pattern_labeling_image_id']
 
     def get_worker_id(self, myuser):
-        #TODO : 여기서 받은 myuser는 인스턴스이다. object를 쓰려면 Model이름을 써야함.
         worker_list = list(MyUser.objects.filter(is_admin=False).values('id'))
         return worker_list
 
