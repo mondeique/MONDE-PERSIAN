@@ -131,7 +131,13 @@ class OriginalImage(models.Model):
     def _save_image(self):
         from PIL import Image
         resp = requests.get(self.image_url)
-        image = Image.open(BytesIO(resp.content))
+        byteImgIO = BytesIO()
+        byteImg = Image.open(BytesIO(resp.content))
+        byteImg.save(byteImgIO, "JPEG")
+        byteImgIO.seek(0)
+        byteImg = byteImgIO.read()
+        dataBytesIO = BytesIO(byteImg)
+        image = Image.open(dataBytesIO)
         image = image.convert('RGB')
         width, height = image.size
         left = width * 0.01
@@ -202,9 +208,14 @@ class CroppedImage(models.Model):
 
     def _save_cropped_image(self):
         from PIL import Image
-        resp = requests.get(self.image_url)
-        print(resp)
-        image = Image.open(BytesIO(resp.content))
+        resp = requests.get(self.origin_source.image_url)
+        byteImgIO = BytesIO()
+        byteImg = Image.open(BytesIO(resp.content))
+        byteImg.save(byteImgIO, "JPEG")
+        byteImgIO.seek(0)
+        byteImg = byteImgIO.read()
+        dataBytesIO = BytesIO(byteImg)
+        image = Image.open(dataBytesIO)
         image = image.convert('RGB')
         width, height = image.size
         left = width * self.left
