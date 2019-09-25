@@ -394,7 +394,7 @@ class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
         return origin_id
 
     def get_color_label_info(self, image):
-        categories = image.categories.color_source.last()
+        categories = image.categories.color_source
         if categories:
             color = categories.color_source
             data = {'color': color.id}
