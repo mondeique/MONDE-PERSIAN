@@ -645,7 +645,7 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         charm_data = self.get_category_data()
-        Categories.objects.update_or_create(cropped_source=cropped_image, default={'charm_source': charm_data})
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'charm_source': charm_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
