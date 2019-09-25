@@ -181,13 +181,13 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
                   ]
 
     def get_total_boxing_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_original_images.filter(valid=True).count()
             return count
         return None
 
     def get_total_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
                                                              categories__shape_source__isnull=False,
                                                              categories__handle_source__isnull=False,
@@ -198,37 +198,37 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
         return None
 
     def get_color_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
             return count
         return None
 
     def get_shape_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False).count()
             return count
         return None
 
     def get_handle_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
             return count
         return None
 
     def get_charm_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__charm_source__isnull=False).count()
             return count
         return None
 
     def get_deco_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
             return count
         return None
 
     def get_pattern_labeling_worked_count(self, myuser):
-        if myuser.is_admin:
+        if myuser:
             count = myuser.assigned_cropped_images.filter(categories__pattern_source__isnull=False).count()
             return count
         return None

@@ -138,14 +138,12 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
 
 # 알바 관리 page 버튼을 눌렀을 때 호출되는 API
 class WorkerManageRetrieveAPIView(generics.RetrieveAPIView):
-    #TODO : permission 으로 추가해도 됨 (admin만 접근 가능하게)
     #https: // www.django - rest - framework.org / api - guide / permissions /
     permission_classes = (IsAuthenticated,)
     queryset = MyUser.objects.filter(is_admin=False)
     serializer_class = WorkerManageRetrieveSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        # id = self.kwargs['user_id']
         worker = self.get_queryset()
         serializer = self.serializer_class(worker, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -551,7 +549,7 @@ class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         color_data = self.get_category_data()
-        Categories.objects.create(color_source=color_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'color_source':color_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
@@ -583,7 +581,7 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         shape_data = self.get_category_data()
-        Categories.objects.create(shape_source=shape_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'shape_source': shape_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
@@ -615,7 +613,7 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         handle_data = self.get_category_data()
-        Categories.objects.create(handle_source=handle_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'handle_source': handle_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
@@ -647,7 +645,7 @@ class CharmLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         charm_data = self.get_category_data()
-        Categories.objects.create(charm_source=charm_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, default={'charm_source': charm_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
@@ -679,7 +677,7 @@ class DecoLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.U
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         deco_data = self.get_category_data()
-        Categories.objects.create(deco_source=deco_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'deco_source': deco_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
@@ -711,7 +709,7 @@ class PatternLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixin
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
         pattern_data = self.get_category_data()
-        Categories.objects.create(pattern_source=pattern_data, cropped_source=cropped_image)
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'pattern_source': pattern_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
