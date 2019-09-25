@@ -398,7 +398,8 @@ class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_origin_id(self, image):
         image = self.context['image']
-        origin_id = image.cropped_images.id
+        origin_id = image.origin_source.id
+
         return origin_id
 
     def get_color_label_info(self, image):
@@ -544,7 +545,8 @@ class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_origin_id(self, image):
         image = self.context['image']
-        origin_id = image.cropped_images.id
+        origin_id = image.origin_source.id
+
         return origin_id
 
     def get_handle_label_info(self, image):
@@ -615,7 +617,8 @@ class CharmLabelingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_origin_id(self, image):
         image = self.context['image']
-        origin_id = image.cropped_images.id
+        origin_id = image.origin_source.id
+
         return origin_id
 
     def get_charm_label_info(self, image):
@@ -686,7 +689,8 @@ class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_origin_id(self, image):
         image = self.context['image']
-        origin_id = image.cropped_images.id
+        origin_id = image.origin_source.id
+
         return origin_id
 
     def get_deco_label_info(self, image):
@@ -757,7 +761,8 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
 
     def get_origin_id(self, image):
         image = self.context['image']
-        origin_id = image.cropped_images.id
+        origin_id = image.origin_source.id
+
         return origin_id
 
     def get_pattern_label_info(self, image):
