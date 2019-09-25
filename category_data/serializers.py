@@ -371,22 +371,30 @@ class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_origin_id(self, image):
         image = self.context['image']
@@ -509,22 +517,30 @@ class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_origin_id(self, image):
         image = self.context['image']
@@ -572,22 +588,30 @@ class CharmLabelingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_origin_id(self, image):
         image = self.context['image']
@@ -635,22 +659,30 @@ class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_origin_id(self, image):
         image = self.context['image']
@@ -698,22 +730,30 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
     def get_next_id(self, image):
         images = self.context['images']
         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_prev_id(self, image):
         images = self.context['images']
         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_valid_next_id(self, image):
         left_images = self.context['left_images']
         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        return next_image.id
+        if next_image:
+            return next_image.id
+        return None
 
     def get_valid_prev_id(self, image):
         left_images = self.context['left_images']
         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        return prev_image.id
+        if prev_image:
+            return prev_image.id
+        return None
 
     def get_origin_id(self, image):
         image = self.context['image']
