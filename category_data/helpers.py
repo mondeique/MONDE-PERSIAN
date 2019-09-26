@@ -35,7 +35,7 @@ def generate_filename(n):
     KEY_SOURCE = string.ascii_letters + string.digits
     return ''.join(random.choice(KEY_SOURCE) for _ in range(n))
 
-
+# TODO : 이 부분 맞는지 feedback
 def load_to_s3(folder_name):
     # Create an S3 Client
     s3 = boto3.client('s3')
