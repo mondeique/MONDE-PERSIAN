@@ -218,7 +218,7 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        user = self.request.user
+        # user = self.request.user
         images = self.queryset
         return images
 
