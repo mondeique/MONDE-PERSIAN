@@ -5,6 +5,7 @@ import string
 import os
 from rest_framework import status
 from rest_framework.response import Response
+from category_data.models import OriginalImage
 from data_management.loader import load_credential
 import boto3
 
@@ -34,11 +35,18 @@ def generate_filename(n):
     KEY_SOURCE = string.ascii_letters + string.digits
     return ''.join(random.choice(KEY_SOURCE) for _ in range(n))
 
-
+# TODO : 이 부분 맞는지 feedback
 def load_to_s3(folder_name):
+    # Create an S3 Client
+    s3 = boto3.client('s3')
+
     current_path = os.getcwd()
-    folder_path = os.path.join(current_path, folder_name)
+    folder_path = current_path + folder_name
     file_list = os.listdir(folder_path)
+
     for image in file_list:
-        s3.upload_file(os.path.join(folder_path + image), 'original-bag-images-dev', generate_filename(10))
+        filename = generate_filename(10)
+        s3.upload_file(folder_path + image, 'original-bag-images-dev', filename)
+        s3_image_url = 'http://s3-ap-northeast-2.amazonsaws.com/original-bag-images-dev' + filename
+        OriginalImage.objects.create(s3_image_url=s3_image_url)
     return Response({}, status=status.HTTP_201_CREATED)
