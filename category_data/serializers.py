@@ -98,9 +98,7 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         return count
 
     def get_total_labeling_worked_count(self, myuser):
-        queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
-                                                         categories__shape_source__isnull=False,
-                                                         categories__handle_source__isnull=False,
+        queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
                                                          categories__charm_source__isnull=False,
                                                          categories__deco_source__isnull=False,
                                                          categories__pattern_source__isnull=False)
@@ -188,12 +186,11 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
 
     def get_total_labeling_worked_count(self, myuser):
         if myuser:
-            queryset = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False,
-                                                             categories__shape_source__isnull=False,
-                                                             categories__handle_source__isnull=False,
+            queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
                                                              categories__charm_source__isnull=False,
                                                              categories__deco_source__isnull=False,
                                                              categories__pattern_source__isnull=False)
+
             return queryset.count()
         return None
 
