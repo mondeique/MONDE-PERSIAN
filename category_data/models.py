@@ -121,7 +121,7 @@ class OriginalImage(models.Model):
     def save(self, *args, **kwargs):
         super(OriginalImage, self).save(*args, **kwargs)
         if not self.image:
-            self._save_image()
+           self._save_image()
 
     # TODO : fix me better name
     def save_origin_valid(self, *args, **kwargs):
@@ -132,7 +132,7 @@ class OriginalImage(models.Model):
     def _save_image(self):
         from PIL import Image
         if self.s3_image_url:
-            resp = requests.get(self.s3_image_url)
+            pass
         else:
             resp = requests.get(self.image_url)
         byteImgIO = BytesIO()

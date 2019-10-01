@@ -252,6 +252,7 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
                                     left=l, right=r, top=t, bottom=b)
         original_image.valid = True
         if original_image.s3_image_url:
+	    original_image.save_origin_valid()
             return Response({}, status=status.HTTP_201_CREATED)
         original_image.save()
         return Response({}, status=status.HTTP_201_CREATED)
