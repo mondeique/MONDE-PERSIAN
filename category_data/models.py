@@ -212,7 +212,10 @@ class CroppedImage(models.Model):
 
     def _save_cropped_image(self):
         from PIL import Image
-        resp = requests.get(self.origin_source.image_url)
+	if self.origin_source.s3_image_url:
+	    resp = requests.get(self.origin_source.s3_image_url)
+	else:
+	    resp = requests.get(self.origin_source.image_url
         byteImgIO = BytesIO()
         byteImg = Image.open(BytesIO(resp.content))
         byteImg.save(byteImgIO, "JPEG")
