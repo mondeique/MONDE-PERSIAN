@@ -128,7 +128,6 @@ class OriginalImage(models.Model):
         super(OriginalImage, self).save(*args, **kwargs)
 
     # image_url 을 통해 image 저장
-    # TODO : 이 부분 맞는지 feedback
     def _save_image(self):
         from PIL import Image
         if self.s3_image_url:
