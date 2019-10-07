@@ -119,3 +119,6 @@ media/
 
 # jupyter notebook file
 *.ipynb
+
+# dump rdb file
+dump.rdb
