@@ -44,16 +44,18 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     labeling_assigned_count = serializers.SerializerMethodField()
     total_boxing_worked_count = serializers.SerializerMethodField()
     total_labeling_worked_count = serializers.SerializerMethodField()
-    color_labeling_worked_count = serializers.SerializerMethodField()
+    # color_labeling_worked_count = serializers.SerializerMethodField()
     shape_labeling_worked_count = serializers.SerializerMethodField()
-    handle_labeling_worked_count = serializers.SerializerMethodField()
+    cover_labeling_worked_count = serializers.SerializerMethodField()
+    # handle_labeling_worked_count = serializers.SerializerMethodField()
     charm_labeling_worked_count = serializers.SerializerMethodField()
     deco_labeling_worked_count = serializers.SerializerMethodField()
     pattern_labeling_worked_count = serializers.SerializerMethodField()
     boxing_image_id = serializers.SerializerMethodField()
-    color_labeling_image_id = serializers.SerializerMethodField()
+    # color_labeling_image_id = serializers.SerializerMethodField()
     shape_labeling_image_id = serializers.SerializerMethodField()
-    handle_labeling_image_id = serializers.SerializerMethodField()
+    cover_labeling_image_id = serializers.SerializerMethodField()
+    # handle_labeling_image_id = serializers.SerializerMethodField()
     charm_labeling_image_id = serializers.SerializerMethodField()
     deco_labeling_image_id = serializers.SerializerMethodField()
     pattern_labeling_image_id = serializers.SerializerMethodField()
@@ -69,16 +71,18 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'labeling_assigned_count',
                   'total_boxing_worked_count',
                   'total_labeling_worked_count',
-                  'color_labeling_worked_count',
+                  # 'color_labeling_worked_count',
                   'shape_labeling_worked_count',
-                  'handle_labeling_worked_count',
+                  'cover_labeling_worked_count',
+                  # 'handle_labeling_worked_count',
                   'charm_labeling_worked_count',
                   'deco_labeling_worked_count',
                   'pattern_labeling_worked_count',
                   'boxing_image_id',
-                  'color_labeling_image_id',
+                  # 'color_labeling_image_id',
                   'shape_labeling_image_id',
-                  'handle_labeling_image_id',
+                  'cover_labeling_image_id',
+                  # 'handle_labeling_image_id',
                   'charm_labeling_image_id',
                   'deco_labeling_image_id',
                   'pattern_labeling_image_id',
@@ -99,21 +103,26 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
 
     def get_total_labeling_worked_count(self, myuser):
         queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
+                                                         categories__cover_source__isnull=False,
                                                          categories__charm_source__isnull=False,
                                                          categories__deco_source__isnull=False,
                                                          categories__pattern_source__isnull=False)
         return queryset.count()
 
-    def get_color_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
-        return count
+    # def get_color_labeling_worked_count(self, myuser):
+    #     count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
+    #     return count
 
     def get_shape_labeling_worked_count(self, myuser):
         count = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False).count()
         return count
 
-    def get_handle_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
+    # def get_handle_labeling_worked_count(self, myuser):
+    #     count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
+    #     return count
+
+    def get_cover_labeling_worked_count(self, myuser):
+        count = myuser.assigned_cropped_images.filter(categories__cover_source__isnull=False).count()
         return count
 
     def get_charm_labeling_worked_count(self, myuser):
@@ -131,14 +140,17 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_boxing_image_id(self, validated_data):
         return self.context['boxing_image_id']
 
-    def get_color_labeling_image_id(self, validated_data):
-        return self.context['color_labeling_image_id']
+    # def get_color_labeling_image_id(self, validated_data):
+    #     return self.context['color_labeling_image_id']
 
     def get_shape_labeling_image_id(self, validated_data):
         return self.context['shape_labeling_image_id']
 
-    def get_handle_labeling_image_id(self, validated_data):
-        return self.context['handle_labeling_image_id']
+    def get_cover_labeling_image_id(self, validated_data):
+        return self.context['cover_labeling_image_id']
+
+    # def get_handle_labeling_image_id(self, validated_data):
+    #     return self.context['handle_labeling_image_id']
 
     def get_charm_labeling_image_id(self, validated_data):
         return self.context['charm_labeling_image_id']
@@ -158,9 +170,10 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
 class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
     total_boxing_worked_count = serializers.SerializerMethodField()
     total_labeling_worked_count = serializers.SerializerMethodField()
-    color_labeling_worked_count = serializers.SerializerMethodField()
+    # color_labeling_worked_count = serializers.SerializerMethodField()
     shape_labeling_worked_count = serializers.SerializerMethodField()
-    handle_labeling_worked_count = serializers.SerializerMethodField()
+    cover_labeling_worked_count = serializers.SerializerMethodField()
+    # handle_labeling_worked_count = serializers.SerializerMethodField()
     charm_labeling_worked_count = serializers.SerializerMethodField()
     deco_labeling_worked_count = serializers.SerializerMethodField()
     pattern_labeling_worked_count = serializers.SerializerMethodField()
@@ -168,9 +181,10 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ['username',
-                  'color_labeling_worked_count',
+                  # 'color_labeling_worked_count',
                   'shape_labeling_worked_count',
-                  'handle_labeling_worked_count',
+                  'cover_labeling_worked_count',
+                  # 'handle_labeling_worked_count',
                   'charm_labeling_worked_count',
                   'deco_labeling_worked_count',
                   'pattern_labeling_worked_count',
@@ -187,6 +201,7 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
     def get_total_labeling_worked_count(self, myuser):
         if myuser:
             queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
+                                                             categories__cover_source__isnull=False,
                                                              categories__charm_source__isnull=False,
                                                              categories__deco_source__isnull=False,
                                                              categories__pattern_source__isnull=False)
@@ -194,11 +209,11 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
             return queryset.count()
         return None
 
-    def get_color_labeling_worked_count(self, myuser):
-        if myuser:
-            count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
-            return count
-        return None
+    # def get_color_labeling_worked_count(self, myuser):
+    #     if myuser:
+    #         count = myuser.assigned_cropped_images.filter(categories__color_source__isnull=False).count()
+    #         return count
+    #     return None
 
     def get_shape_labeling_worked_count(self, myuser):
         if myuser:
@@ -206,11 +221,17 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
             return count
         return None
 
-    def get_handle_labeling_worked_count(self, myuser):
+    def get_cover_labeling_worked_count(self, myuser):
         if myuser:
-            count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
+            count = myuser.assigned_cropped_images.filter(categories__cover_source__isnull=False).count()
             return count
         return None
+
+    # def get_handle_labeling_worked_count(self, myuser):
+    #     if myuser:
+    #         count = myuser.assigned_cropped_images.filter(categories__handle_source__isnull=False).count()
+    #         return count
+    #     return None
 
     def get_charm_labeling_worked_count(self, myuser):
         if myuser:

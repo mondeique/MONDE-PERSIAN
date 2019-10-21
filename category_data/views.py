@@ -75,9 +75,10 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user, context={'boxing_image_id': self.boxing_image_id(),
-                                                          'color_labeling_image_id': self.color_labeling_image_id(),
+                                                          # 'color_labeling_image_id': self.color_labeling_image_id(),
                                                           'shape_labeling_image_id': self.shape_labeling_image_id(),
-                                                          'handle_labeling_image_id': self.handle_labeling_image_id(),
+                                                          'cover_labeling_image_id': self.cover_labeling_image_id(),
+                                                          # 'handle_labeling_image_id': self.handle_labeling_image_id(),
                                                           'charm_labeling_image_id': self.charm_labeling_image_id(),
                                                           'deco_labeling_image_id': self.deco_labeling_image_id(),
                                                           'pattern_labeling_image_id': self.pattern_labeling_image_id()})
@@ -93,12 +94,12 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
-    def color_labeling_image_id(self):
-        user = self.get_object()
-        image = user.assigned_cropped_images.filter(categories__color_source__isnull=True).order_by('pk').first()
-        if image:
-            return image.id
-        return None
+    # def color_labeling_image_id(self):
+    #     user = self.get_object()
+    #     image = user.assigned_cropped_images.filter(categories__color_source__isnull=True).order_by('pk').first()
+    #     if image:
+    #         return image.id
+    #     return None
 
     def shape_labeling_image_id(self):
         user = self.get_object()
@@ -107,9 +108,16 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
-    def handle_labeling_image_id(self):
+    # def handle_labeling_image_id(self):
+    #     user = self.get_object()
+    #     image = user.assigned_cropped_images.filter(categories__handle_source__isnull=True).order_by('pk').first()
+    #     if image:
+    #         return image.id
+    #     return None
+
+    def cover_labeling_image_id(self):
         user = self.get_object()
-        image = user.assigned_cropped_images.filter(categories__handle_source__isnull=True).order_by('pk').first()
+        image = user.assigned_cropped_images.filter(categories__cover_source__isnull=True).order_by('pk').first()
         if image:
             return image.id
         return None
