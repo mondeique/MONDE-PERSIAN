@@ -131,31 +131,29 @@ class OriginalImage(models.Model):
     # image_url 을 통해 image 저장
     def _save_image(self):
         from PIL import Image
-        if self.s3_image_url:
-            pass
-        else:
+        if not self.s3_image_url:
             resp = requests.get(self.image_url)
-        byteImgIO = BytesIO()
-        byteImg = Image.open(BytesIO(resp.content))
-        byteImg.save(byteImgIO, "JPEG")
-        byteImgIO.seek(0)
-        byteImg = byteImgIO.read()
-        dataBytesIO = BytesIO(byteImg)
-        image = Image.open(dataBytesIO)
-        image = image.convert('RGB')
-        width, height = image.size
-        left = width * 0.01
-        top = height * 0.01
-        right = width * 0.99
-        bottom = height * 0.99
-        crop_data = image.crop((int(left), int(top), int(right), int(bottom)))
-        # http://stackoverflow.com/questions/3723220/how-do-you-convert-a-pil-image-to-a-django-file
-        crop_io = BytesIO()
-        crop_data.save(crop_io, format=self.get_image_extension())
-        crop_file = InMemoryUploadedFile(crop_io, None, get_image_filename(self.image), 'image/jpeg', len(crop_io.getvalue()), None)
-        self.image.save(get_image_filename(self.image), crop_file, save=False)
-        # To avoid recursive save, call super.save
-        super(OriginalImage, self).save()
+            byteImgIO = BytesIO()
+            byteImg = Image.open(BytesIO(resp.content))
+            byteImg.save(byteImgIO, "JPEG")
+            byteImgIO.seek(0)
+            byteImg = byteImgIO.read()
+            dataBytesIO = BytesIO(byteImg)
+            image = Image.open(dataBytesIO)
+            image = image.convert('RGB')
+            width, height = image.size
+            left = width * 0.01
+            top = height * 0.01
+            right = width * 0.99
+            bottom = height * 0.99
+            crop_data = image.crop((int(left), int(top), int(right), int(bottom)))
+            # http://stackoverflow.com/questions/3723220/how-do-you-convert-a-pil-image-to-a-django-file
+            crop_io = BytesIO()
+            crop_data.save(crop_io, format=self.get_image_extension())
+            crop_file = InMemoryUploadedFile(crop_io, None, get_image_filename(self.image), 'image/jpeg', len(crop_io.getvalue()), None)
+            self.image.save(get_image_filename(self.image), crop_file, save=False)
+            # To avoid recursive save, call super.save
+            super(OriginalImage, self).save()
 
 
 class CroppedImage(models.Model):
