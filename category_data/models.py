@@ -102,6 +102,7 @@ class OriginalImage(models.Model):
     valid = models.NullBooleanField(default=False)
     image = models.ImageField(upload_to='original-bag-images-dev', null=True, blank=True)
     s3_image_url = models.URLField(max_length=300, null=True)
+    image_review = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = '[1] Original Image'

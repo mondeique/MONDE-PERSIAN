@@ -262,6 +262,8 @@ class BoxCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
         cropped_image = self.queryset.get(origin_source=original_image)
         l,r,t,b = self.get_ltrb()
         cropped_image.update(l,t,r,b)
+        original_image.image_review = True
+        original_image.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_original_image(self, *args, **kwargs):
