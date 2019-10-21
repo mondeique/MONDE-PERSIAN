@@ -237,41 +237,50 @@ class CroppedImage(models.Model):
         super(CroppedImage, self).save()
 
 
-class ColorTag(models.Model):
-    color_name = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name = '[3-1] Color Tag'
-
-    def __str__(self):
-        return self.color_name
+# class ColorTag(models.Model):
+#     color_name = models.CharField(max_length=50)
+#
+#     class Meta:
+#         verbose_name = '[3-1] Color Tag'
+#
+#     def __str__(self):
+#         return self.color_name
 
 
 class ShapeTag(models.Model):
     shape_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-2] Shape Tag'
+        verbose_name = '[3-1] Shape Tag'
 
     def __str__(self):
         return self.shape_name
 
 
-class HandleTag(models.Model):
-    handle_name = models.CharField(max_length=50)
+# class HandleTag(models.Model):
+#     handle_name = models.CharField(max_length=50)
+#
+#     class Meta:
+#         verbose_name = '[3-3] Handle Tag'
+#
+#     def __str__(self):
+#         return self.handle_name
+
+class CoverTag(models.Model):
+    cover_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-3] Handle Tag'
+        verbose_name = '[3-2] Cover Tag'
 
     def __str__(self):
-        return self.handle_name
+        return self.cover_name
 
 
 class CharmTag(models.Model):
     charm_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-4] Charm Tag'
+        verbose_name = '[3-3] Charm Tag'
 
     def __str__(self):
         return self.charm_name
@@ -281,7 +290,7 @@ class DecoTag(models.Model):
     deco_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-5] Deco Tag'
+        verbose_name = '[3-4] Deco Tag'
 
     def __str__(self):
         return self.deco_name
@@ -291,7 +300,7 @@ class PatternTag(models.Model):
     pattern_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-6] Pattern Tag'
+        verbose_name = '[3-5] Pattern Tag'
 
     def __str__(self):
         return self.pattern_name
@@ -304,10 +313,11 @@ class Categories(models.Model):
 
     version = models.IntegerField(null=True)
     cropped_source = models.ForeignKey(CroppedImage, on_delete=models.CASCADE, related_name='categories')
-    color_source = models.ForeignKey(ColorTag, null=True, on_delete=models.CASCADE)
+    # color_source = models.ForeignKey(ColorTag, null=True, on_delete=models.CASCADE)
     shape_source = models.ForeignKey(ShapeTag, null=True, on_delete=models.CASCADE)
+    cover_source = models.ForeignKey(CoverTag, null=True, on_delete=models.CASCADE)
     charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE)
-    handle_source = models.ForeignKey(HandleTag, null=True, on_delete=models.CASCADE)
+    # handle_source = models.ForeignKey(HandleTag, null=True, on_delete=models.CASCADE)
     deco_source = models.ForeignKey(DecoTag, null=True, on_delete=models.CASCADE)
     pattern_source = models.ForeignKey(PatternTag, null=True, on_delete=models.CASCADE)
 

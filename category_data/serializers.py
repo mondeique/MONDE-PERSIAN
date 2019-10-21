@@ -340,78 +340,78 @@ class BoxCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 # Color Labeling 화면 조회 시리얼라이저
-class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
-    next_id = serializers.SerializerMethodField()
-    prev_id = serializers.SerializerMethodField()
-    valid_next_id = serializers.SerializerMethodField()
-    valid_prev_id = serializers.SerializerMethodField()
-    color_label_info = serializers.SerializerMethodField()
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    image_url = serializers.SerializerMethodField()
-    origin_id = serializers.SerializerMethodField()
-
-    class Meta:
-        model = CroppedImage
-        fields =['id',
-                 'image_url',
-                 'color_label_info',
-                 'next_id',
-                 'prev_id',
-                 'user',
-                 'valid_next_id',
-                 'valid_prev_id',
-                 'origin_id',
-                 ]
-
-    def get_image_url(self, image):
-        image_url = self.context['image_url']
-        return image_url
-
-    def get_next_id(self, image):
-        images = self.context['images']
-        next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
-
-    def get_prev_id(self, image):
-        images = self.context['images']
-        prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
-
-    def get_valid_next_id(self, image):
-        left_images = self.context['left_images']
-        next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
-
-    def get_valid_prev_id(self, image):
-        left_images = self.context['left_images']
-        prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
-
-    def get_origin_id(self, image):
-        image = self.context['image']
-        origin_id = image.origin_source.id
-
-        return origin_id
-
-    def get_color_label_info(self, image):
-        categories = image.categories.last()
-        if categories:
-            color = categories.color_source
-            if color:
-                data = {'color': color.id}
-            else:
-                data = None
-        else:
-            data = None
-        return data
+# class ColorLabelingRetrieveSerializer(serializers.ModelSerializer):
+#     next_id = serializers.SerializerMethodField()
+#     prev_id = serializers.SerializerMethodField()
+#     valid_next_id = serializers.SerializerMethodField()
+#     valid_prev_id = serializers.SerializerMethodField()
+#     color_label_info = serializers.SerializerMethodField()
+#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     image_url = serializers.SerializerMethodField()
+#     origin_id = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = CroppedImage
+#         fields =['id',
+#                  'image_url',
+#                  'color_label_info',
+#                  'next_id',
+#                  'prev_id',
+#                  'user',
+#                  'valid_next_id',
+#                  'valid_prev_id',
+#                  'origin_id',
+#                  ]
+#
+#     def get_image_url(self, image):
+#         image_url = self.context['image_url']
+#         return image_url
+#
+#     def get_next_id(self, image):
+#         images = self.context['images']
+#         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_prev_id(self, image):
+#         images = self.context['images']
+#         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_valid_next_id(self, image):
+#         left_images = self.context['left_images']
+#         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_valid_prev_id(self, image):
+#         left_images = self.context['left_images']
+#         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_origin_id(self, image):
+#         image = self.context['image']
+#         origin_id = image.origin_source.id
+#
+#         return origin_id
+#
+#     def get_color_label_info(self, image):
+#         categories = image.categories.last()
+#         if categories:
+#             color = categories.color_source
+#             if color:
+#                 data = {'color': color.id}
+#             else:
+#                 data = None
+#         else:
+#             data = None
+#         return data
 
 
 # Shape Labeling 화면 조회 시리얼라이저
@@ -489,29 +489,29 @@ class ShapeLabelingRetrieveSerializer(serializers.ModelSerializer):
         return data
 
 
-# Handle Labeling 화면 조회 시리얼라이저
-class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
+# Cover Labeling 화면 조회 시리얼라이저
+class CoverLabelingRetrieveSerializer(serializers.ModelSerializer):
     next_id = serializers.SerializerMethodField()
     prev_id = serializers.SerializerMethodField()
     valid_next_id = serializers.SerializerMethodField()
     valid_prev_id = serializers.SerializerMethodField()
-    handle_label_info = serializers.SerializerMethodField()
+    cover_label_info = serializers.SerializerMethodField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     image_url = serializers.SerializerMethodField()
     origin_id = serializers.SerializerMethodField()
 
     class Meta:
         model = CroppedImage
-        fields =['id',
-                 'image_url',
-                 'handle_label_info',
-                 'next_id',
-                 'prev_id',
-                 'user',
-                 'valid_next_id',
-                 'valid_prev_id',
-                 'origin_id',
-                 ]
+        fields = ['id',
+                  'image_url',
+                  'cover_label_info',
+                  'next_id',
+                  'prev_id',
+                  'user',
+                  'valid_next_id',
+                  'valid_prev_id',
+                  'origin_id',
+                  ]
 
     def get_image_url(self, image):
         image_url = self.context['image_url']
@@ -551,17 +551,92 @@ class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
 
         return origin_id
 
-    def get_handle_label_info(self, image):
+    def get_cover_label_info(self, image):
         categories = image.categories.last()
         if categories:
-            handle = categories.handle_source
-            if handle:
-                data = {'handle': handle.id}
+            cover = categories.cover_source
+            if cover:
+                data = {'cover': cover.id}
             else:
                 data = None
         else:
             data = None
         return data
+
+
+# # Handle Labeling 화면 조회 시리얼라이저
+# class HandleLabelingRetrieveSerializer(serializers.ModelSerializer):
+#     next_id = serializers.SerializerMethodField()
+#     prev_id = serializers.SerializerMethodField()
+#     valid_next_id = serializers.SerializerMethodField()
+#     valid_prev_id = serializers.SerializerMethodField()
+#     handle_label_info = serializers.SerializerMethodField()
+#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     image_url = serializers.SerializerMethodField()
+#     origin_id = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = CroppedImage
+#         fields =['id',
+#                  'image_url',
+#                  'handle_label_info',
+#                  'next_id',
+#                  'prev_id',
+#                  'user',
+#                  'valid_next_id',
+#                  'valid_prev_id',
+#                  'origin_id',
+#                  ]
+#
+#     def get_image_url(self, image):
+#         image_url = self.context['image_url']
+#         return image_url
+#
+#     def get_next_id(self, image):
+#         images = self.context['images']
+#         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_prev_id(self, image):
+#         images = self.context['images']
+#         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_valid_next_id(self, image):
+#         left_images = self.context['left_images']
+#         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_valid_prev_id(self, image):
+#         left_images = self.context['left_images']
+#         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_origin_id(self, image):
+#         image = self.context['image']
+#         origin_id = image.origin_source.id
+#
+#         return origin_id
+#
+#     def get_handle_label_info(self, image):
+#         categories = image.categories.last()
+#         if categories:
+#             handle = categories.handle_source
+#             if handle:
+#                 data = {'handle': handle.id}
+#             else:
+#                 data = None
+#         else:
+#             data = None
+#         return data
 
 
 # Charm Labeling 화면 조회 시리얼라이저
@@ -789,12 +864,12 @@ class PatternLabelingRetrieveSerializer(serializers.ModelSerializer):
         return data
 
 
-# Color Label 생성 및 업데이트 시리얼라이저
-class ColorLabelCreateUpdateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Categories
-        fields = ['color_source']
+# # Color Label 생성 및 업데이트 시리얼라이저
+# class ColorLabelCreateUpdateSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Categories
+#         fields = ['color_source']
 
 
 # Shape Label 생성 및 업데이트 시리얼라이저
@@ -805,12 +880,20 @@ class ShapeLabelCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ['shape_source']
 
 
-# Handle Label 생성 및 업데이트 시리얼라이저
-class HandleLabelCreateUpdateSerializer(serializers.ModelSerializer):
+# Cover Label 생성 및 업데이트 시리얼라이저
+class CoverLabelCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Categories
-        fields = ['handle_source']
+        fields = ['cover_source']
+
+
+# # Handle Label 생성 및 업데이트 시리얼라이저
+# class HandleLabelCreateUpdateSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Categories
+#         fields = ['handle_source']
 
 
 # Charm Label 생성 및 업데이트 시리얼라이저

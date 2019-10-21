@@ -1,7 +1,6 @@
 from django.contrib import admin
 from category_data.models import *
 from django import forms
-# Register your models here.
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
@@ -30,16 +29,19 @@ class OriginalImageAdmin(admin.ModelAdmin):
             return Response(status=HTTP_400_BAD_REQUEST)
 
 
-class ColorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'color_name']
+# class ColorAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'color_name']
 
 
 class ShapeAdmin(admin.ModelAdmin):
     list_display = ['id', 'shape_name']
 
 
-class HandleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'handle_name']
+class CoverAdmin(admin.ModelAdmin):
+    list_display = ['id', 'cover_name']
+
+# class HandleAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'handle_name']
 
 
 class CharmAdmin(admin.ModelAdmin):
@@ -57,9 +59,10 @@ class PatternAdmin(admin.ModelAdmin):
 admin.site.register(MyUser)
 admin.site.register(OriginalImage, OriginalImageAdmin)
 admin.site.register(CroppedImage)
-admin.site.register(ColorTag, ColorAdmin)
+# admin.site.register(ColorTag, ColorAdmin)
 admin.site.register(ShapeTag, ShapeAdmin)
-admin.site.register(HandleTag, HandleAdmin)
+admin.site.register(CoverTag, CoverAdmin)
+# admin.site.register(HandleTag, HandleAdmin)
 admin.site.register(CharmTag, CharmAdmin)
 admin.site.register(DecoTag, DecoAdmin)
 admin.site.register(PatternTag, PatternAdmin)

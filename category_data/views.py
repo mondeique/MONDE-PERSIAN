@@ -300,46 +300,46 @@ class BoxingDestroyAPIView(generics.DestroyAPIView):
         return self.queryset.get(pk=id)
 
 
-# Color Labeling 화면 url 입력 시 호출되는 API
-class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ColorLabelingRetrieveSerializer
-    queryset = CroppedImage.objects.all()
-
-    def retrieve(self, request, *args, **kwargs):
-        images, image = self.get_image()
-        left_images = images.filter(categories__color_source__isnull=True).exclude(image="")
-        image_url = self.get_image_url().data
-        if image:
-            serializer = self.serializer_class(image, context={'left_images': left_images,
-                                                               'images': images,
-                                                               'image': image,
-                                                               'image_url': image_url})
-        else:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @retry
-    def get_image_url(self):
-        _, image = self.get_image()
-        if image:
-            image_url = image.image.url
-            return Response(image_url, status=status.HTTP_200_OK)
-
-        else:
-            image_url = None
-            return Response(image_url, status=status.HTTP_204_NO_CONTENT)
-
-    def get_queryset(self):
-        user = self.request.user
-        images = self.queryset.filter(assigned_user=user)
-        return images
-
-    def get_image(self, **kwargs):
-        id = self.kwargs['cropped_image_id']
-        images = self.get_queryset()
-        image = images.filter(pk=id).last()
-        return images, image
+# # Color Labeling 화면 url 입력 시 호출되는 API
+# class ColorLabelingRetrieveAPIView(generics.RetrieveAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = ColorLabelingRetrieveSerializer
+#     queryset = CroppedImage.objects.all()
+#
+#     def retrieve(self, request, *args, **kwargs):
+#         images, image = self.get_image()
+#         left_images = images.filter(categories__color_source__isnull=True).exclude(image="")
+#         image_url = self.get_image_url().data
+#         if image:
+#             serializer = self.serializer_class(image, context={'left_images': left_images,
+#                                                                'images': images,
+#                                                                'image': image,
+#                                                                'image_url': image_url})
+#         else:
+#             return Response({}, status=status.HTTP_204_NO_CONTENT)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#     @retry
+#     def get_image_url(self):
+#         _, image = self.get_image()
+#         if image:
+#             image_url = image.image.url
+#             return Response(image_url, status=status.HTTP_200_OK)
+#
+#         else:
+#             image_url = None
+#             return Response(image_url, status=status.HTTP_204_NO_CONTENT)
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         images = self.queryset.filter(assigned_user=user)
+#         return images
+#
+#     def get_image(self, **kwargs):
+#         id = self.kwargs['cropped_image_id']
+#         images = self.get_queryset()
+#         image = images.filter(pk=id).last()
+#         return images, image
 
 
 # Shape Labeling 화면 url 입력 시 호출되는 API
@@ -379,15 +379,51 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
         return images, image
 
 
-# Handle Labeling 화면 url 입력 시 호출되는 API
-class HandleLabelingRetrieveAPIView(generics.RetrieveAPIView):
+# # Handle Labeling 화면 url 입력 시 호출되는 API
+# class HandleLabelingRetrieveAPIView(generics.RetrieveAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = HandleLabelingRetrieveSerializer
+#     queryset = CroppedImage.objects.all()
+#
+#     def retrieve(self, request, *args, **kwargs):
+#         images, image = self.get_image()
+#         left_images = images.filter(categories__handle_source__isnull=True).exclude(image="")
+#         image_url = self.get_image_url().data
+#         if image:
+#             serializer = self.serializer_class(image, context={'left_images': left_images,
+#                                                                'images': images,
+#                                                                'image': image,
+#                                                                'image_url': image_url})
+#         else:
+#             return Response({}, status=status.HTTP_204_NO_CONTENT)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#     @retry
+#     def get_image_url(self):
+#         _, image = self.get_image()
+#         image_url = image.image.url
+#         return Response(image_url, status=status.HTTP_200_OK)
+#
+#     def get_queryset(self):
+#         user = self.request.user
+#         images = self.queryset.filter(assigned_user=user)
+#         return images
+#
+#     def get_image(self, **kwargs):
+#         id = self.kwargs['cropped_image_id']
+#         images = self.get_queryset()
+#         image = images.filter(pk=id).last()
+#         return images, image
+
+# Cover Labeling 화면 url 입력 시 호출되는 API
+class CoverLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = HandleLabelingRetrieveSerializer
+    serializer_class = CoverLabelingRetrieveSerializer
     queryset = CroppedImage.objects.all()
 
     def retrieve(self, request, *args, **kwargs):
         images, image = self.get_image()
-        left_images = images.filter(categories__handle_source__isnull=True).exclude(image="")
+        left_images = images.filter(categories__cover_source__isnull=True).exclude(image="")
         image_url = self.get_image_url().data
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
@@ -543,36 +579,36 @@ class LabelingDestroyAPIView(generics.DestroyAPIView):
         return self.queryset.get(pk=id)
 
 
-# Color Label 생성 및 업데이트 시 호출되는 API
-class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
-    permission_classes = (IsAuthenticated,)
-    queryset = Categories.objects.filter(color_source__isnull=True).all()
-    serializer_class = ColorLabelCreateUpdateSerializer
-
-    def post(self, request, *args, **kwargs):
-        cropped_image = self.get_object()
-        color_data = self.get_category_data()
-        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'color_source':color_data})
-        return Response({}, status=status.HTTP_201_CREATED)
-
-    def put(self, request, *args, **kwargs):
-        cropped_image = self.get_object()
-        color_category = Categories.objects.get(cropped_source=cropped_image)
-        color_data = self.get_category_data()
-        color_category.color_source = color_data
-        color_category.save()
-        return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
-
-    def get_object(self):
-        id = self.kwargs['cropped_image_id']
-        cropped_image = CroppedImage.objects.get(pk=id)
-        return cropped_image
-
-    def get_category_data(self):
-        data = self.request.data
-        color_data = int(data['color'])
-        color = ColorTag.objects.get(pk=color_data)
-        return color
+# # Color Label 생성 및 업데이트 시 호출되는 API
+# class ColorLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+#     permission_classes = (IsAuthenticated,)
+#     queryset = Categories.objects.filter(color_source__isnull=True).all()
+#     serializer_class = ColorLabelCreateUpdateSerializer
+#
+#     def post(self, request, *args, **kwargs):
+#         cropped_image = self.get_object()
+#         color_data = self.get_category_data()
+#         Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'color_source':color_data})
+#         return Response({}, status=status.HTTP_201_CREATED)
+#
+#     def put(self, request, *args, **kwargs):
+#         cropped_image = self.get_object()
+#         color_category = Categories.objects.get(cropped_source=cropped_image)
+#         color_data = self.get_category_data()
+#         color_category.color_source = color_data
+#         color_category.save()
+#         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+#
+#     def get_object(self):
+#         id = self.kwargs['cropped_image_id']
+#         cropped_image = CroppedImage.objects.get(pk=id)
+#         return cropped_image
+#
+#     def get_category_data(self):
+#         data = self.request.data
+#         color_data = int(data['color'])
+#         color = ColorTag.objects.get(pk=color_data)
+#         return color
 
 
 # Shape Label 생성 및 업데이트 시 호출되는 API
@@ -607,24 +643,55 @@ class ShapeLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.
         return shape
 
 
-# Handle Label 생성 및 업데이트 시 호출되는 API
-class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+# # Handle Label 생성 및 업데이트 시 호출되는 API
+# class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+#     permission_classes = (IsAuthenticated,)
+#     queryset = Categories.objects.filter(handle_source__isnull=True).all()
+#     serializer_class = HandleLabelCreateUpdateSerializer
+#
+#     def post(self, request, *args, **kwargs):
+#         cropped_image = self.get_object()
+#         handle_data = self.get_category_data()
+#         Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'handle_source': handle_data})
+#         return Response({}, status=status.HTTP_201_CREATED)
+#
+#     def put(self, request, *args, **kwargs):
+#         cropped_image = self.get_object()
+#         handle_category = Categories.objects.get(cropped_source=cropped_image)
+#         handle_data = self.get_category_data()
+#         handle_category.handle_source = handle_data
+#         handle_category.save()
+#         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
+#
+#     def get_object(self):
+#         id = self.kwargs['cropped_image_id']
+#         cropped_image = CroppedImage.objects.get(pk=id)
+#         return cropped_image
+#
+#     def get_category_data(self):
+#         data = self.request.data
+#         handle_data = int(data['handle'])
+#         handle = HandleTag.objects.get(pk=handle_data)
+#         return handle
+
+# Cover Label 생성 및 업데이트 시 호출되는 API
+class CoverLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     permission_classes = (IsAuthenticated,)
-    queryset = Categories.objects.filter(handle_source__isnull=True).all()
-    serializer_class = HandleLabelCreateUpdateSerializer
+    queryset = Categories.objects.filter(cover_source__isnull=True).all()
+    serializer_class = CoverLabelCreateUpdateSerializer
 
     def post(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        handle_data = self.get_category_data()
-        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'handle_source': handle_data})
+        cover_data = self.get_category_data()
+        Categories.objects.update_or_create(cropped_source=cropped_image, defaults={'cover_source': cover_data})
         return Response({}, status=status.HTTP_201_CREATED)
 
     def put(self, request, *args, **kwargs):
         cropped_image = self.get_object()
-        handle_category = Categories.objects.get(cropped_source=cropped_image)
-        handle_data = self.get_category_data()
-        handle_category.handle_source = handle_data
-        handle_category.save()
+        cover_category = Categories.objects.get(cropped_source=cropped_image)
+        cover_data = self.get_category_data()
+        cover_category.cover_source = cover_data
+        cover_category.save()
         return Response({}, status=status.HTTP_206_PARTIAL_CONTENT)
 
     def get_object(self):
@@ -634,9 +701,9 @@ class HandleLabelCreateUpdateAPI(GenericAPIView, mixins.CreateModelMixin, mixins
 
     def get_category_data(self):
         data = self.request.data
-        handle_data = int(data['handle'])
-        handle = HandleTag.objects.get(pk=handle_data)
-        return handle
+        cover_data = int(data['cover'])
+        cover = CoverTag.objects.get(pk=cover_data)
+        return cover
 
 
 # Charm Label 생성 및 업데이트 시 호출되는 API
