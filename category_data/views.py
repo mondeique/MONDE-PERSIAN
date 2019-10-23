@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from knox.models import AuthToken
 from .helpers import load_csv_data
+from django.db.models import Q
 
 ASSIGN_SIZE = 50
 VERSION = 1
@@ -231,6 +232,34 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
         return images
 
 
+# SpeedyBoxing 화면 url 입력 시 호출되는 API
+class SpeedyBoxingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = BoxingRetrieveSerializer
+    queryset = OriginalImage.objects.filter(Q(s3_image_url__contains="backpack") | Q(s3_image_url__contains="bucket") |
+                                            Q(s3_image_url__contains="square") | Q(s3_image_url__contains="trapezoid") |
+                                            Q(s3_image_url__contains="hobo") | Q(s3_image_url__contains="circle") |
+                                            Q(s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        id = self.kwargs['original_image_id']
+        images = self.get_queryset()
+        left_images = images.filter(valid=False)
+        image = self.get_queryset().filter(pk=id).last()
+
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        # user = self.request.user
+        images = self.queryset
+        return images
+
+
 def retry(func):
     def retried_func(*args, **kwargs):
         MAX_TRIES = 5
@@ -378,6 +407,48 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
     def get_queryset(self):
         user = self.request.user
         images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
+
+
+# SpeedyShape Labeling 화면 url 입력 시 호출되는 API
+class SpeedyShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ShapeLabelingRetrieveSerializer
+    queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        images, image = self.get_image()
+        left_images = images.filter(categories__shape_source__isnull=True).exclude(image="")
+        image_url = self.get_image_url().data
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images,
+                                                               'image': image,
+                                                               'image_url': image_url})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @retry
+    def get_image_url(self):
+        _, image = self.get_image()
+        image_url = image.image.url
+        return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        images = self.queryset
         return images
 
     def get_image(self, **kwargs):

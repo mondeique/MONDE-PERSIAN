@@ -288,7 +288,7 @@ class BoxingRetrieveSerializer(serializers.ModelSerializer):
                  'prev_id',
                  'user',
                  'valid_next_id',
-                 'valid_prev_id',]
+                 'valid_prev_id']
 
     def get_image_url(self, image):
         if image.image:
