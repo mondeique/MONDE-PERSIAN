@@ -37,9 +37,11 @@ $ python manage.py runserver 0.0.0.0:7989
 - OriginalImageCreateAPIView : Original Image 생성 시 호출되는 API (미리 upload 되어 있어야 하는 API)
 ### Boxing page
 - BoxingRetrieveAPIView : Boxing 화면 original_image_id url 입력 시 호출되는 API
+- SpeedyBoxingRetrieveAPIView : SpeedyBoxing 화면 original_image_id url 입력 시 호출되는 API
 - BoxingCreateUpdateAPI : Box 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
 - BoxingDestroyAPIView : Box 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
 ### Labeling page
 - LabelingRetrieveAPIView : Labeling 화면 cropped_image_id url 입력 시 호출되는 API
+- SpeedyLabelingRetrieveAPIView : SpeedyLabeling 화면 cropped_image_id url 입력 시 호출되는 API
 - LabelingDestroyAPIView : Labeling Image 삭제 시 호출되는 API (delete 버튼 눌렀을 때 호출)
 - LabelCreateUpdateAPI (6개) : 각 Label 생성 및 업데이트 시 호출되는 API (enter 쳤을 때 호출)
