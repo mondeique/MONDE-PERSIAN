@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/boxing/assign', BoxingAssignAPIView.as_view()),
     path('api/labeling/assign', LabelingAssignAPIView.as_view()),
     path('api/boxing/<int:original_image_id>', BoxingRetrieveAPIView.as_view()),
-    path('api/speedboxing/<int:original_image_id>'), SpeedyBoxingRetrieveAPIView(),
+    path('api/speedboxing/<int:original_image_id>'), SpeedyBoxingRetrieveAPIView.as_view(),
     path('api/box/<int:original_image_id>', BoxCreateUpdateAPI.as_view()),
     # path('api/colorlabeling/<int:cropped_image_id>', ColorLabelingRetrieveAPIView.as_view()),
     path('api/shapelabeling/<int:cropped_image_id>', ShapeLabelingRetrieveAPIView.as_view()),
