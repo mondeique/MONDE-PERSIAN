@@ -52,10 +52,10 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     deco_labeling_worked_count = serializers.SerializerMethodField()
     pattern_labeling_worked_count = serializers.SerializerMethodField()
     boxing_image_id = serializers.SerializerMethodField()
-    speedyboxing_image_id = serializers.SerializerMethodField()
+    speedboxing_image_id = serializers.SerializerMethodField()
     # color_labeling_image_id = serializers.SerializerMethodField()
     shape_labeling_image_id = serializers.SerializerMethodField()
-    speedyshape_labeling_image_id = serializers.SerializerMethodField()
+    speedshape_labeling_image_id = serializers.SerializerMethodField()
     cover_labeling_image_id = serializers.SerializerMethodField()
     # handle_labeling_image_id = serializers.SerializerMethodField()
     charm_labeling_image_id = serializers.SerializerMethodField()
@@ -81,10 +81,10 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'deco_labeling_worked_count',
                   'pattern_labeling_worked_count',
                   'boxing_image_id',
-                  'speedyboxing_image_id',
+                  'speedboxing_image_id',
                   # 'color_labeling_image_id',
                   'shape_labeling_image_id',
-                  'shape_labeling_image_id',
+                  'speedshape_labeling_image_id',
                   'cover_labeling_image_id',
                   # 'handle_labeling_image_id',
                   'charm_labeling_image_id',
@@ -144,8 +144,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_boxing_image_id(self, validated_data):
         return self.context['boxing_image_id']
 
-    def get_speedyboxing_image_id(self, validated_data):
-        return self.context['speedyboxing_image_id']
+    def get_speedboxing_image_id(self, validated_data):
+        return self.context['speedboxing_image_id']
 
     # def get_color_labeling_image_id(self, validated_data):
     #     return self.context['color_labeling_image_id']
@@ -153,8 +153,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_shape_labeling_image_id(self, validated_data):
         return self.context['shape_labeling_image_id']
 
-    def get_speedyshape_labeling_image_id(self, validated_data):
-        return self.context['speedyshape_labeling_image_id']
+    def get_speedshape_labeling_image_id(self, validated_data):
+        return self.context['speedshape_labeling_image_id']
 
     def get_cover_labeling_image_id(self, validated_data):
         return self.context['cover_labeling_image_id']

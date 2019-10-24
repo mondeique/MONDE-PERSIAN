@@ -76,10 +76,10 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user, context={'boxing_image_id': self.boxing_image_id(),
-                                                          'speedyboxing_image_id': self.speedyboxing_image_id(),
+                                                          'speedboxing_image_id': self.speedboxing_image_id(),
                                                           # 'color_labeling_image_id': self.color_labeling_image_id(),
                                                           'shape_labeling_image_id': self.shape_labeling_image_id(),
-                                                          'speedyshape_labeling_image_id': self.speedyshape_labeling_image_id(),
+                                                          'speedshape_labeling_image_id': self.speedshape_labeling_image_id(),
                                                           'cover_labeling_image_id': self.cover_labeling_image_id(),
                                                           # 'handle_labeling_image_id': self.handle_labeling_image_id(),
                                                           'charm_labeling_image_id': self.charm_labeling_image_id(),
@@ -97,7 +97,7 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
-    def speedyboxing_image_id(self):
+    def speedboxing_image_id(self):
         image = OriginalImage.objects.filter(Q(s3_image_url__contains="backpack") | Q(s3_image_url__contains="bucket") |
                                              Q(s3_image_url__contains="square") | Q(s3_image_url__contains="trapezoid") |
                                              Q(s3_image_url__contains="hobo") | Q(s3_image_url__contains="circle") |
@@ -120,7 +120,7 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
-    def speedyshape_labeling_image_id(self):
+    def speedshape_labeling_image_id(self):
         image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
                                            Q(origin_source__s3_image_url__contains="bucket") |
                                            Q(origin_source__s3_image_url__contains="square") |
@@ -257,7 +257,7 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
 
 
 # SpeedyBoxing 화면 url 입력 시 호출되는 API
-class SpeedyBoxingRetrieveAPIView(generics.RetrieveAPIView):
+class SpeedBoxingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = BoxingRetrieveSerializer
     queryset = OriginalImage.objects.filter(Q(s3_image_url__contains="backpack") | Q(s3_image_url__contains="bucket") |
@@ -441,7 +441,7 @@ class ShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
 
 # SpeedyShape Labeling 화면 url 입력 시 호출되는 API
-class SpeedyShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
+class SpeedShapeLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ShapeLabelingRetrieveSerializer
     queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
