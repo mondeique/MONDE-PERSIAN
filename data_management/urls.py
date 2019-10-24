@@ -47,7 +47,7 @@ urlpatterns = [
     path('api/patternlabel/<int:cropped_image_id>', PatternLabelCreateUpdateAPI.as_view()),
     path('api/image/delete/<int:original_image_id>', BoxingDestroyAPIView.as_view()),
     path('api/cropimage/delete/<int:cropped_image_id>', LabelingDestroyAPIView.as_view()),
-    path('api/speedshapelabeling/<int:cropped_image_id', SpeedShapeLabelingRetrieveAPIView().as_view()),
+    path('api/speedshapelabeling/<int:cropped_image_id>', SpeedShapeLabelingRetrieveAPIView().as_view()),
     # path('api/speedcoverlabeling/<int:cropped_image_id'), SpeedCoverLabelingRetrieveAPIView(),
     # path('api/speedcharmlabeling/<int:cropped_image_id'), SpeedCharmLabelingRetrieveAPIView(),
     # path('api/speeddecolabeling/<int:cropped_image_id'), SpeedDecoLabelingRetrieveAPIView(),
