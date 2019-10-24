@@ -76,8 +76,10 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user, context={'boxing_image_id': self.boxing_image_id(),
+                                                          'speedyboxing_image_id': self.speedyboxing_image_id(),
                                                           # 'color_labeling_image_id': self.color_labeling_image_id(),
                                                           'shape_labeling_image_id': self.shape_labeling_image_id(),
+                                                          'speedyshape_labeling_image_id': self.speedyshape_labeling_image_id(),
                                                           'cover_labeling_image_id': self.cover_labeling_image_id(),
                                                           # 'handle_labeling_image_id': self.handle_labeling_image_id(),
                                                           'charm_labeling_image_id': self.charm_labeling_image_id(),
@@ -95,6 +97,15 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
+    def speedyboxing_image_id(self):
+        image = OriginalImage.objects.filter(Q(s3_image_url__contains="backpack") | Q(s3_image_url__contains="bucket") |
+                                             Q(s3_image_url__contains="square") | Q(s3_image_url__contains="trapezoid") |
+                                             Q(s3_image_url__contains="hobo") | Q(s3_image_url__contains="circle") |
+                                             Q(s3_image_url__contains="half_circle")).filter(valid=False).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
     # def color_labeling_image_id(self):
     #     user = self.get_object()
     #     image = user.assigned_cropped_images.filter(categories__color_source__isnull=True).order_by('pk').first()
@@ -105,6 +116,19 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
     def shape_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__shape_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def speedyshape_labeling_image_id(self):
+        image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle"))\
+            .filter(categories__shape_source__isnull=True).order_by('pk').first()
         if image:
             return image.id
         return None
