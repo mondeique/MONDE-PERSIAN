@@ -241,7 +241,7 @@ class BoxingRetrieveAPIView(generics.RetrieveAPIView):
         id = self.kwargs['original_image_id']
         images = self.get_queryset().filter(assigned_user=request.user)
         left_images = images.filter(valid=False)
-        image = self.get_queryset().filter(pk=id).last()
+        image = self.get_queryset().filter(pk=id).first()
 
         if image:
             serializer = self.serializer_class(image, context={'left_images': left_images,
