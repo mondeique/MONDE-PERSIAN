@@ -92,7 +92,7 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
 
     def boxing_image_id(self):
         user = self.get_object()
-        image = user.assigned_original_images.order_by('pk').first()
+        image = user.assigned_original_images.filter(image_review=False).order_by('pk').first()
         if image:
             return image.id
         return None
