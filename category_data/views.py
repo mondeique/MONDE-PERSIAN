@@ -81,10 +81,14 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
                                                           'shape_labeling_image_id': self.shape_labeling_image_id(),
                                                           'speedshape_labeling_image_id': self.speedshape_labeling_image_id(),
                                                           'cover_labeling_image_id': self.cover_labeling_image_id(),
+                                                          'speedcover_labeling_image_id': self.speedcover_labeling_image_id(),
                                                           # 'handle_labeling_image_id': self.handle_labeling_image_id(),
                                                           'charm_labeling_image_id': self.charm_labeling_image_id(),
+                                                          'speedcharm_labeling_image_id': self.speedcharm_labeling_image_id(),
                                                           'deco_labeling_image_id': self.deco_labeling_image_id(),
-                                                          'pattern_labeling_image_id': self.pattern_labeling_image_id()})
+                                                          'speeddeco_labeling_image_id': self.speeddeco_labeling_image_id(),
+                                                          'pattern_labeling_image_id': self.pattern_labeling_image_id(),
+                                                          'speedpattern_labeling_image_id': self.speedpattern_labeling_image_id()})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_object(self):
@@ -147,9 +151,35 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
+    def speedcover_labeling_image_id(self):
+        image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle"))\
+            .filter(categories__cover_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
     def charm_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__charm_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def speedcharm_labeling_image_id(self):
+        image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle"))\
+            .filter(categories__charm_source__isnull=True).order_by('pk').first()
         if image:
             return image.id
         return None
@@ -161,9 +191,35 @@ class HomeRetrieveAPIView(generics.RetrieveAPIView):
             return image.id
         return None
 
+    def speeddeco_labeling_image_id(self):
+        image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle"))\
+            .filter(categories__deco_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
     def pattern_labeling_image_id(self):
         user = self.get_object()
         image = user.assigned_cropped_images.filter(categories__pattern_source__isnull=True).order_by('pk').first()
+        if image:
+            return image.id
+        return None
+
+    def speedpattern_labeling_image_id(self):
+        image = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle"))\
+            .filter(categories__pattern_source__isnull=True).order_by('pk').first()
         if image:
             return image.id
         return None
@@ -555,6 +611,47 @@ class CoverLabelingRetrieveAPIView(generics.RetrieveAPIView):
         return images, image
 
 
+class SpeedCoverLabelingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ShapeLabelingRetrieveSerializer
+    queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        images, image = self.get_image()
+        left_images = images.filter(categories__cover_source__isnull=True).exclude(image="")
+        image_url = self.get_image_url().data
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images,
+                                                               'image': image,
+                                                               'image_url': image_url})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @retry
+    def get_image_url(self):
+        _, image = self.get_image()
+        image_url = image.image.url
+        return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        images = self.queryset
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
+
+
 # Charm Labeling 화면 url 입력 시 호출되는 API
 class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
@@ -583,6 +680,47 @@ class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
     def get_queryset(self):
         user = self.request.user
         images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
+
+
+class SpeedCharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ShapeLabelingRetrieveSerializer
+    queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        images, image = self.get_image()
+        left_images = images.filter(categories__charm_source__isnull=True).exclude(image="")
+        image_url = self.get_image_url().data
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images,
+                                                               'image': image,
+                                                               'image_url': image_url})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @retry
+    def get_image_url(self):
+        _, image = self.get_image()
+        image_url = image.image.url
+        return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        images = self.queryset
         return images
 
     def get_image(self, **kwargs):
@@ -629,6 +767,47 @@ class DecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
         return images, image
 
 
+class SpeedDecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ShapeLabelingRetrieveSerializer
+    queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        images, image = self.get_image()
+        left_images = images.filter(categories__shape_deco__isnull=True).exclude(image="")
+        image_url = self.get_image_url().data
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images,
+                                                               'image': image,
+                                                               'image_url': image_url})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @retry
+    def get_image_url(self):
+        _, image = self.get_image()
+        image_url = image.image.url
+        return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        images = self.queryset
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
+
+
 # Pattern Labeling 화면 url 입력 시 호출되는 API
 class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
@@ -657,6 +836,47 @@ class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
     def get_queryset(self):
         user = self.request.user
         images = self.queryset.filter(assigned_user=user)
+        return images
+
+    def get_image(self, **kwargs):
+        id = self.kwargs['cropped_image_id']
+        images = self.get_queryset()
+        image = images.filter(pk=id).last()
+        return images, image
+
+
+class SpeedPatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ShapeLabelingRetrieveSerializer
+    queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
+                                           Q(origin_source__s3_image_url__contains="bucket") |
+                                           Q(origin_source__s3_image_url__contains="square") |
+                                           Q(origin_source__s3_image_url__contains="trapezoid") |
+                                           Q(origin_source__s3_image_url__contains="hobo") |
+                                           Q(origin_source__s3_image_url__contains="circle") |
+                                           Q(origin_source__s3_image_url__contains="half_circle")).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        images, image = self.get_image()
+        left_images = images.filter(categories__pattern_source__isnull=True).exclude(image="")
+        image_url = self.get_image_url().data
+        if image:
+            serializer = self.serializer_class(image, context={'left_images': left_images,
+                                                               'images': images,
+                                                               'image': image,
+                                                               'image_url': image_url})
+        else:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @retry
+    def get_image_url(self):
+        _, image = self.get_image()
+        image_url = image.image.url
+        return Response(image_url, status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        images = self.queryset
         return images
 
     def get_image(self, **kwargs):

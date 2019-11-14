@@ -57,10 +57,14 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     shape_labeling_image_id = serializers.SerializerMethodField()
     speedshape_labeling_image_id = serializers.SerializerMethodField()
     cover_labeling_image_id = serializers.SerializerMethodField()
+    speedcover_labeling_image_id = serializers.SerializerMethodField()
     # handle_labeling_image_id = serializers.SerializerMethodField()
     charm_labeling_image_id = serializers.SerializerMethodField()
+    speedcharm_labeling_image_id = serializers.SerializerMethodField()
     deco_labeling_image_id = serializers.SerializerMethodField()
+    speeddeco_labeling_image_id = serializers.SerializerMethodField()
     pattern_labeling_image_id = serializers.SerializerMethodField()
+    speedpattern_labeling_image_id = serializers.SerializerMethodField()
     worker_id = serializers.SerializerMethodField()
     is_admin = serializers.ReadOnlyField()
 
@@ -86,10 +90,14 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'shape_labeling_image_id',
                   'speedshape_labeling_image_id',
                   'cover_labeling_image_id',
+                  'speedcover_labeling_image_id',
                   # 'handle_labeling_image_id',
                   'charm_labeling_image_id',
+                  'speedcharm_labeling_image_id',
                   'deco_labeling_image_id',
+                  'speeddeco_labeling_image_id',
                   'pattern_labeling_image_id',
+                  'speedpattern_labeling_image_id',
                   'worker_id'
                   ]
 
@@ -159,17 +167,29 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_cover_labeling_image_id(self, validated_data):
         return self.context['cover_labeling_image_id']
 
+    def get_speedcover_labeling_image_id(self, validated_data):
+        return self.context['speedcover_labeling_image_id']
+
     # def get_handle_labeling_image_id(self, validated_data):
     #     return self.context['handle_labeling_image_id']
 
     def get_charm_labeling_image_id(self, validated_data):
         return self.context['charm_labeling_image_id']
 
+    def get_speedcharm_labeling_image_id(self, validated_data):
+        return self.context['speedcharm_labeling_image_id']
+
     def get_deco_labeling_image_id(self, validated_data):
         return self.context['deco_labeling_image_id']
 
+    def get_speeddeco_labeling_image_id(self, validated_data):
+        return self.context['speeddeco_labeling_image_id']
+
     def get_pattern_labeling_image_id(self, validated_data):
         return self.context['pattern_labeling_image_id']
+
+    def get_speedpattern_labeling_image_id(self, validated_data):
+        return self.context['speedpattern_labeling_image_id']
 
     def get_worker_id(self, myuser):
         worker_list = list(MyUser.objects.filter(is_admin=False).values('id'))
