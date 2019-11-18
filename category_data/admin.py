@@ -48,8 +48,8 @@ class CharmAdmin(admin.ModelAdmin):
     list_display = ['id', 'charm_name']
 
 
-class DecoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'deco_name']
+# class DecoAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'deco_name']
 
 
 class PatternAdmin(admin.ModelAdmin):
@@ -64,7 +64,7 @@ admin.site.register(ShapeTag, ShapeAdmin)
 admin.site.register(CoverTag, CoverAdmin)
 # admin.site.register(HandleTag, HandleAdmin)
 admin.site.register(CharmTag, CharmAdmin)
-admin.site.register(DecoTag, DecoAdmin)
+# admin.site.register(DecoTag, DecoAdmin)
 admin.site.register(PatternTag, PatternAdmin)
 admin.site.register(Categories)
 

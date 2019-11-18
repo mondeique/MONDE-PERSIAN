@@ -288,21 +288,21 @@ class CharmTag(models.Model):
         return self.charm_name
 
 
-class DecoTag(models.Model):
-    deco_name = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name = '[3-4] Deco Tag'
-
-    def __str__(self):
-        return self.deco_name
+# class DecoTag(models.Model):
+#     deco_name = models.CharField(max_length=50)
+#
+#     class Meta:
+#         verbose_name = '[3-4] Deco Tag'
+#
+#     def __str__(self):
+#         return self.deco_name
 
 
 class PatternTag(models.Model):
     pattern_name = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = '[3-5] Pattern Tag'
+        verbose_name = '[3-4] Pattern Tag'
 
     def __str__(self):
         return self.pattern_name
@@ -320,7 +320,7 @@ class Categories(models.Model):
     cover_source = models.ForeignKey(CoverTag, null=True, on_delete=models.CASCADE)
     charm_source = models.ForeignKey(CharmTag, null=True, on_delete=models.CASCADE)
     # handle_source = models.ForeignKey(HandleTag, null=True, on_delete=models.CASCADE)
-    deco_source = models.ForeignKey(DecoTag, null=True, on_delete=models.CASCADE)
+    # deco_source = models.ForeignKey(DecoTag, null=True, on_delete=models.CASCADE)
     pattern_source = models.ForeignKey(PatternTag, null=True, on_delete=models.CASCADE)
 
 

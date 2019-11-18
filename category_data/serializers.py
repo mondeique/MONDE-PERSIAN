@@ -49,7 +49,7 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     cover_labeling_worked_count = serializers.SerializerMethodField()
     # handle_labeling_worked_count = serializers.SerializerMethodField()
     charm_labeling_worked_count = serializers.SerializerMethodField()
-    deco_labeling_worked_count = serializers.SerializerMethodField()
+    # deco_labeling_worked_count = serializers.SerializerMethodField()
     pattern_labeling_worked_count = serializers.SerializerMethodField()
     boxing_image_id = serializers.SerializerMethodField()
     speedboxing_image_id = serializers.SerializerMethodField()
@@ -61,8 +61,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     # handle_labeling_image_id = serializers.SerializerMethodField()
     charm_labeling_image_id = serializers.SerializerMethodField()
     speedcharm_labeling_image_id = serializers.SerializerMethodField()
-    deco_labeling_image_id = serializers.SerializerMethodField()
-    speeddeco_labeling_image_id = serializers.SerializerMethodField()
+    # deco_labeling_image_id = serializers.SerializerMethodField()
+    # speeddeco_labeling_image_id = serializers.SerializerMethodField()
     pattern_labeling_image_id = serializers.SerializerMethodField()
     speedpattern_labeling_image_id = serializers.SerializerMethodField()
     worker_id = serializers.SerializerMethodField()
@@ -82,7 +82,7 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   'cover_labeling_worked_count',
                   # 'handle_labeling_worked_count',
                   'charm_labeling_worked_count',
-                  'deco_labeling_worked_count',
+                  # 'deco_labeling_worked_count',
                   'pattern_labeling_worked_count',
                   'boxing_image_id',
                   'speedboxing_image_id',
@@ -94,8 +94,8 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
                   # 'handle_labeling_image_id',
                   'charm_labeling_image_id',
                   'speedcharm_labeling_image_id',
-                  'deco_labeling_image_id',
-                  'speeddeco_labeling_image_id',
+                  # 'deco_labeling_image_id',
+                  # 'speeddeco_labeling_image_id',
                   'pattern_labeling_image_id',
                   'speedpattern_labeling_image_id',
                   'worker_id'
@@ -117,7 +117,7 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
                                                          categories__cover_source__isnull=False,
                                                          categories__charm_source__isnull=False,
-                                                         categories__deco_source__isnull=False,
+                                                         # categories__deco_source__isnull=False,
                                                          categories__pattern_source__isnull=False)
         return queryset.count()
 
@@ -141,9 +141,9 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
         count = myuser.assigned_cropped_images.filter(categories__charm_source__isnull=False).count()
         return count
 
-    def get_deco_labeling_worked_count(self, myuser):
-        count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
-        return count
+    # def get_deco_labeling_worked_count(self, myuser):
+    #     count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
+    #     return count
 
     def get_pattern_labeling_worked_count(self, myuser):
         count = myuser.assigned_cropped_images.filter(categories__pattern_source__isnull=False).count()
@@ -179,11 +179,11 @@ class UserHomeRetrieveSerializer(serializers.ModelSerializer):
     def get_speedcharm_labeling_image_id(self, validated_data):
         return self.context['speedcharm_labeling_image_id']
 
-    def get_deco_labeling_image_id(self, validated_data):
-        return self.context['deco_labeling_image_id']
-
-    def get_speeddeco_labeling_image_id(self, validated_data):
-        return self.context['speeddeco_labeling_image_id']
+    # def get_deco_labeling_image_id(self, validated_data):
+    #     return self.context['deco_labeling_image_id']
+    #
+    # def get_speeddeco_labeling_image_id(self, validated_data):
+    #     return self.context['speeddeco_labeling_image_id']
 
     def get_pattern_labeling_image_id(self, validated_data):
         return self.context['pattern_labeling_image_id']
@@ -205,7 +205,7 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
     cover_labeling_worked_count = serializers.SerializerMethodField()
     # handle_labeling_worked_count = serializers.SerializerMethodField()
     charm_labeling_worked_count = serializers.SerializerMethodField()
-    deco_labeling_worked_count = serializers.SerializerMethodField()
+    # deco_labeling_worked_count = serializers.SerializerMethodField()
     pattern_labeling_worked_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -216,7 +216,7 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
                   'cover_labeling_worked_count',
                   # 'handle_labeling_worked_count',
                   'charm_labeling_worked_count',
-                  'deco_labeling_worked_count',
+                  # 'deco_labeling_worked_count',
                   'pattern_labeling_worked_count',
                   'total_boxing_worked_count',
                   'total_labeling_worked_count',
@@ -233,7 +233,7 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
             queryset = myuser.assigned_cropped_images.filter(categories__shape_source__isnull=False,
                                                              categories__cover_source__isnull=False,
                                                              categories__charm_source__isnull=False,
-                                                             categories__deco_source__isnull=False,
+                                                             # categories__deco_source__isnull=False,
                                                              categories__pattern_source__isnull=False)
 
             return queryset.count()
@@ -269,11 +269,11 @@ class WorkerManageRetrieveSerializer(serializers.ModelSerializer):
             return count
         return None
 
-    def get_deco_labeling_worked_count(self, myuser):
-        if myuser:
-            count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
-            return count
-        return None
+    # def get_deco_labeling_worked_count(self, myuser):
+    #     if myuser:
+    #         count = myuser.assigned_cropped_images.filter(categories__deco_source__isnull=False).count()
+    #         return count
+    #     return None
 
     def get_pattern_labeling_worked_count(self, myuser):
         if myuser:
@@ -765,79 +765,79 @@ class CharmLabelingRetrieveSerializer(serializers.ModelSerializer):
         return data
 
 
-# Deco Labeling 화면 조회 시리얼라이저
-class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
-    next_id = serializers.SerializerMethodField()
-    prev_id = serializers.SerializerMethodField()
-    valid_next_id = serializers.SerializerMethodField()
-    valid_prev_id = serializers.SerializerMethodField()
-    deco_label_info = serializers.SerializerMethodField()
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    image_url = serializers.SerializerMethodField()
-    origin_id = serializers.SerializerMethodField()
-
-    class Meta:
-        model = CroppedImage
-        fields =['id',
-                 'image_url',
-                 'deco_label_info',
-                 'next_id',
-                 'prev_id',
-                 'user',
-                 'valid_next_id',
-                 'valid_prev_id',
-                 'origin_id',
-                 ]
-
-    def get_image_url(self, image):
-        image_url = self.context['image_url']
-        return image_url
-
-    def get_next_id(self, image):
-        images = self.context['images']
-        next_image = images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
-
-    def get_prev_id(self, image):
-        images = self.context['images']
-        prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
-
-    def get_valid_next_id(self, image):
-        left_images = self.context['left_images']
-        next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
-        if next_image:
-            return next_image.id
-        return None
-
-    def get_valid_prev_id(self, image):
-        left_images = self.context['left_images']
-        prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
-        if prev_image:
-            return prev_image.id
-        return None
-
-    def get_origin_id(self, image):
-        image = self.context['image']
-        origin_id = image.origin_source.id
-
-        return origin_id
-
-    def get_deco_label_info(self, image):
-        categories = image.categories.last()
-        if categories:
-            deco = categories.deco_source
-            if deco:
-                data = {'deco': deco.id}
-            else:
-                data = None
-        else:
-            data = None
-        return data
+# # Deco Labeling 화면 조회 시리얼라이저
+# class DecoLabelingRetrieveSerializer(serializers.ModelSerializer):
+#     next_id = serializers.SerializerMethodField()
+#     prev_id = serializers.SerializerMethodField()
+#     valid_next_id = serializers.SerializerMethodField()
+#     valid_prev_id = serializers.SerializerMethodField()
+#     deco_label_info = serializers.SerializerMethodField()
+#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     image_url = serializers.SerializerMethodField()
+#     origin_id = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = CroppedImage
+#         fields =['id',
+#                  'image_url',
+#                  'deco_label_info',
+#                  'next_id',
+#                  'prev_id',
+#                  'user',
+#                  'valid_next_id',
+#                  'valid_prev_id',
+#                  'origin_id',
+#                  ]
+#
+#     def get_image_url(self, image):
+#         image_url = self.context['image_url']
+#         return image_url
+#
+#     def get_next_id(self, image):
+#         images = self.context['images']
+#         next_image = images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_prev_id(self, image):
+#         images = self.context['images']
+#         prev_image = images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_valid_next_id(self, image):
+#         left_images = self.context['left_images']
+#         next_image = left_images.filter(pk__gt=image.id).order_by('pk').first()
+#         if next_image:
+#             return next_image.id
+#         return None
+#
+#     def get_valid_prev_id(self, image):
+#         left_images = self.context['left_images']
+#         prev_image = left_images.filter(pk__lt=image.id).order_by('pk').last()
+#         if prev_image:
+#             return prev_image.id
+#         return None
+#
+#     def get_origin_id(self, image):
+#         image = self.context['image']
+#         origin_id = image.origin_source.id
+#
+#         return origin_id
+#
+#     def get_deco_label_info(self, image):
+#         categories = image.categories.last()
+#         if categories:
+#             deco = categories.deco_source
+#             if deco:
+#                 data = {'deco': deco.id}
+#             else:
+#                 data = None
+#         else:
+#             data = None
+#         return data
 
 
 # Pattern Labeling 화면 조회 시리얼라이저
@@ -955,12 +955,12 @@ class CharmLabelCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ['charm_source']
 
 
-# Deco Label 생성 및 업데이트 시리얼라이저
-class DecoLabelCreateUpdateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Categories
-        fields = ['deco_source']
+# # Deco Label 생성 및 업데이트 시리얼라이저
+# class DecoLabelCreateUpdateSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Categories
+#         fields = ['deco_source']
 
 
 # Pattern Label 생성 및 업데이트 시리얼라이저
