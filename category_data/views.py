@@ -613,7 +613,7 @@ class CoverLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
 class SpeedCoverLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ShapeLabelingRetrieveSerializer
+    serializer_class = CoverLabelingRetrieveSerializer
     queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
                                            Q(origin_source__s3_image_url__contains="bucket") |
                                            Q(origin_source__s3_image_url__contains="square") |
@@ -691,7 +691,7 @@ class CharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
 class SpeedCharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ShapeLabelingRetrieveSerializer
+    serializer_class = CharmLabelingRetrieveSerializer
     queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
                                            Q(origin_source__s3_image_url__contains="bucket") |
                                            Q(origin_source__s3_image_url__contains="square") |
@@ -769,7 +769,7 @@ class SpeedCharmLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
 # class SpeedDecoLabelingRetrieveAPIView(generics.RetrieveAPIView):
 #     permission_classes = (IsAuthenticated,)
-#     serializer_class = ShapeLabelingRetrieveSerializer
+#     serializer_class = DecoLabelingRetrieveSerializer
 #     queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
 #                                            Q(origin_source__s3_image_url__contains="bucket") |
 #                                            Q(origin_source__s3_image_url__contains="square") |
@@ -847,7 +847,7 @@ class PatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
 
 class SpeedPatternLabelingRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = ShapeLabelingRetrieveSerializer
+    serializer_class = PatternLabelingRetrieveSerializer
     queryset = CroppedImage.objects.filter(Q(origin_source__s3_image_url__contains="backpack") |
                                            Q(origin_source__s3_image_url__contains="bucket") |
                                            Q(origin_source__s3_image_url__contains="square") |
