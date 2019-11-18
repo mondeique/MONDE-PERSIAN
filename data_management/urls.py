@@ -48,13 +48,13 @@ urlpatterns = [
     path('api/image/delete/<int:original_image_id>', BoxingDestroyAPIView.as_view()),
     path('api/cropimage/delete/<int:cropped_image_id>', LabelingDestroyAPIView.as_view()),
     path('api/speedshapelabeling/<int:cropped_image_id>', SpeedShapeLabelingRetrieveAPIView().as_view()),
-    path('api/speedcoverlabeling/<int:cropped_image_id'), SpeedCoverLabelingRetrieveAPIView(),
-    path('api/speedcharmlabeling/<int:cropped_image_id'), SpeedCharmLabelingRetrieveAPIView(),
-    # path('api/speeddecolabeling/<int:cropped_image_id'), SpeedDecoLabelingRetrieveAPIView(),
-    path('api/speedpatternlabeling/<int:cropped_image_id'), SpeedPatternLabelingRetrieveAPIView(),
+    path('api/speedcoverlabeling/<int:cropped_image_id>', SpeedCoverLabelingRetrieveAPIView().as_view()),
+    path('api/speedcharmlabeling/<int:cropped_image_id>', SpeedCharmLabelingRetrieveAPIView().as_view()),
+    # path('api/speeddecolabeling/<int:cropped_image_id', SpeedDecoLabelingRetrieveAPIView().as_view()),
+    path('api/speedpatternlabeling/<int:cropped_image_id>', SpeedPatternLabelingRetrieveAPIView().as_view()),
     path('import/', TemplateView.as_view(template_name='working_page/import_csv.html')),
 
     path('api/auth/login', LoginAPI.as_view(), name='login'),
     path('api/auth/user', UserAPI.as_view()),
-    path('api/auth/register', RegistrationAPI.as_view()),
+    path('api/auth/register', RegistrationAPI.as_view())
     ]
